@@ -1,0 +1,2138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALARM Writing Coach — Year 12 Enterprise Computing</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0c10;
+  --surface: #12151c;
+  --surface2: #1a1e28;
+  --border: #252a38;
+  --border2: #2e3448;
+  --text: #e4e8f4;
+  --muted: #5a6280;
+  --accent: #4fffb0;
+  --accent2: #ff5f7e;
+  --accent3: #ffe566;
+  --accent4: #7c6fff;
+  --identify-c: #4fc3f7;
+  --describe-c: #81c784;
+  --explain-c: #ffb74d;
+  --analyse-c: #ff8a65;
+  --evaluate-c: #ce93d8;
+  --critically-c: #f06292;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Instrument Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.6;
+}
+h1,h2,h3,h4 { font-family: 'Syne', sans-serif; }
+
+/* ── HEADER ── */
+.header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0.85rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-left { display: flex; align-items: center; gap: 1rem; }
+.logo { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em; }
+.logo span { color: var(--accent); }
+.badge-tag {
+  font-size: 0.65rem;
+  font-family: 'Syne', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  border: 1px solid var(--border2);
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+.header-right { display: flex; align-items: center; gap: 0.75rem; }
+#ghLoadIndicator {
+  display: none;
+  font-size: 0.65rem;
+  font-family: 'Syne', monospace;
+  color: var(--accent);
+  background: rgba(79,255,176,0.08);
+  border: 1px solid rgba(79,255,176,0.2);
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+.btn-teacher {
+  font-size: 0.72rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.9rem;
+  background: transparent;
+  border: 1px solid var(--accent3);
+  color: var(--accent3);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-teacher:hover { background: rgba(255,229,102,0.1); }
+
+/* ── TAB NAV ── */
+.tab-nav {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 1.5rem;
+}
+.tab-nav::-webkit-scrollbar { display: none; }
+.tab-btn {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.9rem 1.1rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-btn:hover:not(.active) { color: var(--text); }
+
+/* ── PROGRESS ── */
+.progress-bar-wrap {
+  height: 3px;
+  background: var(--border);
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent4));
+  transition: width 0.4s ease;
+}
+
+/* ── CONTENT ── */
+.tab-content { display: none; padding: 2rem 1.5rem; max-width: 900px; margin: 0 auto; }
+.tab-content.active { display: block; }
+
+/* ── CARDS ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.card-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+}
+.section-heading {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 0.4rem;
+  letter-spacing: -0.02em;
+}
+.section-sub {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+/* ── ALARM LEVELS ── */
+.alarm-levels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+.alarm-level-card {
+  border-radius: 10px;
+  padding: 1.1rem 1.25rem;
+  border: 1px solid;
+  position: relative;
+  overflow: hidden;
+}
+.alarm-level-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.level-identify { border-color: rgba(79,195,247,0.25); background: rgba(79,195,247,0.04); }
+.level-identify::before { background: var(--identify-c); }
+.level-describe  { border-color: rgba(129,199,132,0.25); background: rgba(129,199,132,0.04); }
+.level-describe::before  { background: var(--describe-c); }
+.level-explain   { border-color: rgba(255,183,77,0.25);  background: rgba(255,183,77,0.04); }
+.level-explain::before   { background: var(--explain-c); }
+.level-analyse   { border-color: rgba(255,138,101,0.25); background: rgba(255,138,101,0.04); }
+.level-analyse::before   { background: var(--analyse-c); }
+.level-evaluate  { border-color: rgba(206,147,216,0.25); background: rgba(206,147,216,0.04); }
+.level-evaluate::before  { background: var(--evaluate-c); }
+.level-critically{ border-color: rgba(240,98,146,0.25);  background: rgba(240,98,146,0.04); }
+.level-critically::before{ background: var(--critically-c); }
+
+.level-name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 0.9rem;
+  margin-bottom: 0.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.level-what { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.6rem; line-height: 1.5; }
+.level-verbs { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.verb-chip {
+  font-family: 'Syne', monospace;
+  font-size: 0.67rem;
+  padding: 2px 8px;
+  border-radius: 3px;
+  border: 1px solid;
+  text-transform: lowercase;
+}
+
+/* ── VERB MATCH ── */
+.verb-match-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+.vm-verb {
+  font-family: 'Syne', monospace;
+  font-size: 0.8rem;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+.vm-verb:hover { border-color: var(--accent); }
+.vm-verb.correct { background: rgba(79,255,176,0.1); border-color: var(--accent); color: var(--accent); cursor: default; }
+.vm-verb.wrong { background: rgba(255,95,126,0.1); border-color: var(--accent2); color: var(--accent2); }
+
+.level-buttons { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.5rem; }
+.level-btn-vm {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  border-radius: 5px;
+  border: 1px solid;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ── ACCORDION ── */
+.accordion-item { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 0.6rem; overflow: hidden; }
+.accordion-header {
+  width: 100%;
+  background: var(--surface);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1.2rem;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+}
+.accordion-header:hover { background: var(--surface2); }
+.accordion-header-left { display: flex; align-items: center; gap: 0.75rem; }
+.accordion-title { font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; }
+.accordion-body { display: none; padding: 1.1rem 1.2rem; border-top: 1px solid var(--border); background: var(--surface2); }
+.accordion-body.open { display: block; }
+
+/* ── VSCC INPUTS ── */
+.vscc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-bottom: 0.65rem; }
+.vscc-full { margin-bottom: 0.65rem; }
+.field-label {
+  display: block;
+  font-family: 'Syne', monospace;
+  font-size: 0.62rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.3rem;
+}
+.field-input, .field-select, .field-textarea {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: 7px;
+  padding: 0.55rem 0.8rem;
+  color: var(--text);
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 0.85rem;
+  transition: border-color 0.2s;
+}
+.field-input:focus, .field-select:focus, .field-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.field-select { cursor: pointer; }
+.field-textarea { resize: vertical; line-height: 1.6; }
+
+/* ── BUTTONS ── */
+.btn {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.55rem 1.25rem;
+  border-radius: 7px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.18s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.btn-primary { background: var(--accent); color: #000; }
+.btn-primary:hover { background: #3de89e; }
+.btn-secondary { background: transparent; border: 1px solid var(--border2); color: var(--muted); }
+.btn-secondary:hover { border-color: var(--text); color: var(--text); }
+.btn-accent4 { background: var(--accent4); color: #fff; }
+.btn-accent4:hover { background: #6a5eee; }
+
+/* ── CHECKLIST ── */
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.88rem;
+}
+.check-item:last-child { border-bottom: none; }
+.check-box {
+  width: 18px; height: 18px;
+  border: 2px solid var(--border2);
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+  font-size: 0.7rem;
+}
+.check-item.done .check-box { background: var(--accent); border-color: var(--accent); color: #000; }
+.check-item.done > span { text-decoration: line-through; color: var(--muted); }
+
+/* ── Q SELECTOR (Session 3) ── */
+#qSelector { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+.q-btn {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 0.78rem;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 7px;
+  padding: 0.45rem 0.85rem;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+  line-height: 1.4;
+}
+.q-btn:hover { border-color: var(--accent4); color: var(--accent4); }
+.q-btn.active { background: rgba(124,111,255,0.1); border-color: var(--accent4); color: var(--accent4); }
+.q-teacher-badge {
+  font-family: 'Syne', monospace;
+  font-size: 0.6rem;
+  background: rgba(255,229,102,0.12);
+  color: var(--accent3);
+  border: 1px solid rgba(255,229,102,0.25);
+  padding: 1px 5px;
+  border-radius: 2px;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+}
+
+/* ── BUILDER STEPS ── */
+.builder-step {
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+  margin-bottom: 0.65rem;
+}
+.builder-step-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+.step-num-circle {
+  width: 22px; height: 22px;
+  background: var(--accent4);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 0.65rem;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-family: 'Syne', monospace;
+}
+.step-label { font-size: 0.8rem; font-weight: 600; color: var(--text); }
+.step-hint { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.35rem; }
+
+/* ── ASSEMBLED RESPONSE ── */
+#assembledResponse .para-piece {
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  margin-bottom: 0.5rem;
+}
+
+/* ── GRADER ── */
+.grader-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+.grader-question { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.85rem; line-height: 1.5; }
+.grader-options { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+@media (max-width: 580px) { .grader-options { grid-template-columns: 1fr; } }
+.grader-option {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 0.75rem 0.9rem;
+  cursor: pointer;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  transition: all 0.15s;
+  text-align: left;
+}
+.grader-option:hover:not(.grader-locked) { border-color: var(--accent4); }
+.grader-option.correct-answer { background: rgba(79,255,176,0.08); border-color: var(--accent); }
+.grader-option.wrong-answer  { background: rgba(255,95,126,0.08);  border-color: var(--accent2); opacity: 0.7; }
+.grader-feedback { margin-top: 0.75rem; font-size: 0.82rem; color: var(--muted); line-height: 1.6; display: none; }
+.grader-feedback.show { display: block; }
+.hidden-verb-badge {
+  display: inline-block;
+  font-family: 'Syne', monospace;
+  font-size: 0.6rem;
+  background: rgba(255,229,102,0.1);
+  color: var(--accent3);
+  border: 1px solid rgba(255,229,102,0.25);
+  padding: 1px 6px;
+  border-radius: 3px;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+}
+
+/* ── FINAL QUIZ ── */
+.quiz-q { margin-bottom: 1.25rem; }
+.quiz-q-text { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.6rem; }
+.quiz-options label { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.85rem; margin-bottom: 0.4rem; cursor: pointer; }
+.quiz-options input[type=radio] { accent-color: var(--accent4); margin-top: 3px; }
+.quiz-result { padding: 0.4rem 0.65rem; border-radius: 5px; font-size: 0.78rem; margin-top: 0.3rem; display: none; }
+.quiz-result.correct { background: rgba(79,255,176,0.1); color: var(--accent); }
+.quiz-result.wrong   { background: rgba(255,95,126,0.1);  color: var(--accent2); }
+
+/* ── SCORE CIRCLE ── */
+.score-circle {
+  width: 110px; height: 110px;
+  border-radius: 50%;
+  border: 4px solid var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+  margin: 0 auto 1.5rem;
+  font-family: 'Syne', sans-serif;
+}
+#finalScoreNum { font-size: 2.2rem; font-weight: 800; color: var(--accent); line-height: 1; }
+.score-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+
+/* ── TEACHER PANEL ── */
+#teacherOverlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  z-index: 1000;
+  overflow-y: auto;
+  backdrop-filter: blur(4px);
+}
+#teacherPanel {
+  max-width: 840px;
+  margin: 2rem auto;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.tp-tab-bar {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  padding: 0 1.5rem;
+  flex-wrap: wrap;
+}
+.tp-tab-btn {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+  margin-bottom: -1px;
+}
+.tp-tab-btn.active { color: var(--accent3); border-bottom-color: var(--accent3); }
+.tp-scaffold-step {
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+  margin-bottom: 0.6rem;
+  position: relative;
+}
+.tp-step-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.7rem; }
+.tp-step-num { width:22px;height:22px;border-radius:50%;background:var(--accent4);color:#fff;font-size:0.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Syne',monospace; }
+.tp-step-remove { margin-left:auto;background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:0 0.25rem;transition:color 0.15s; }
+.tp-step-remove:hover { color: var(--accent2); }
+.tp-field-row { display:grid;grid-template-columns:1fr 1fr;gap:0.6rem; }
+@media (max-width:580px) { .tp-field-row { grid-template-columns:1fr; } }
+.tp-q-card { background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:0.9rem 1rem;margin-bottom:0.6rem; }
+.tp-q-card-header { display:flex;align-items:flex-start;gap:0.75rem; }
+.tp-q-text { font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;line-height:1.45; }
+.tp-q-meta { display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;font-size:0.72rem; }
+.tp-q-actions { display:flex;gap:0.3rem;flex-shrink:0; }
+.tp-icon-btn { background:transparent;border:1px solid var(--border2);border-radius:5px;padding:0.25rem 0.5rem;font-size:0.8rem;cursor:pointer;transition:all 0.15s; }
+.tp-icon-btn:hover { border-color:var(--accent4); }
+.tp-icon-btn.del:hover { border-color:var(--accent2); }
+#teacherPanel input:focus,#teacherPanel select:focus,#teacherPanel textarea:focus { outline:none;border-color:var(--accent3)!important; }
+
+/* ── STRUCTURE TEMPLATES ── */
+.struct-step { padding:0.5rem 0;border-bottom:1px solid var(--border);font-size:0.83rem;line-height:1.5; }
+.struct-step:last-child { border-bottom:none; }
+.struct-step-label { font-family:'Syne',monospace;font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.15rem; }
+
+/* ── INFO BOXES ── */
+.info-box { padding:0.85rem 1rem;border-radius:8px;font-size:0.82rem;line-height:1.6;margin-bottom:1rem; }
+.info-box-amber { background:rgba(255,229,102,0.06);border:1px solid rgba(255,229,102,0.2);color:#c8b860; }
+.info-box-purple { background:rgba(124,111,255,0.07);border:1px solid rgba(124,111,255,0.2);color:#b0aaf0; }
+.info-box-green  { background:rgba(79,255,176,0.06);border:1px solid rgba(79,255,176,0.2);color:var(--accent); }
+
+/* ── MARK GUIDE ── */
+.mark-row { display:flex;align-items:center;gap:0.75rem;padding:0.5rem 0;border-bottom:1px solid var(--border);font-size:0.83rem; }
+.mark-row:last-child { border-bottom:none; }
+.mark-pill { font-family:'Syne',monospace;font-size:0.7rem;padding:2px 10px;border-radius:20px;border:1px solid;white-space:nowrap;flex-shrink:0; }
+
+/* ── MISC ── */
+.divider { border:none;border-top:1px solid var(--border);margin:1.25rem 0; }
+.flex-row { display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap; }
+.text-muted { color:var(--muted); }
+.text-accent { color:var(--accent); }
+.mono { font-family:'Syne',monospace; }
+
+@media (max-width:640px) {
+  .tab-content { padding:1.25rem 1rem; }
+  .vscc-row { grid-template-columns:1fr; }
+  .alarm-levels { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-left">
+    <div class="logo"><span>A</span>LARM Writing Coach</div>
+    <div class="badge-tag">Yr 12 Enterprise Computing</div>
+  </div>
+  <div class="header-right">
+    <span id="ghLoadIndicator"></span>
+    <button class="btn-teacher" onclick="openTeacherPanel()">⚙ Teacher</button>
+  </div>
+</header>
+
+<!-- PROGRESS -->
+<div class="progress-bar-wrap">
+  <div class="progress-bar-fill" id="progressBar" style="width:20%"></div>
+</div>
+
+<!-- TAB NAV -->
+<nav class="tab-nav" role="tablist">
+  <button class="tab-btn active" onclick="goTab(0)">1 · What is ALARM?</button>
+  <button class="tab-btn" onclick="goTab(1)">2 · NESA Key Words</button>
+  <button class="tab-btn" onclick="goTab(2)">3 · VSCC Breakdown</button>
+  <button class="tab-btn" onclick="goTab(3)">4 · Build a Response</button>
+  <button class="tab-btn" onclick="goTab(4)">5 · Level Grader</button>
+  <button class="tab-btn" onclick="goTab(5)">6 · Final Check</button>
+</nav>
+
+<!-- ══ TAB 0: WHAT IS ALARM? ══ -->
+<div class="tab-content active" id="tab0">
+  <div class="section-heading">What is ALARM?</div>
+  <p class="section-sub"><strong>ALARM stands for A Learning and Responding Matrix.</strong> It is a tool that groups NESA's key words (directive verbs) by the depth of thinking and response they require — from simple recall all the way to critical evaluation.</p>
+
+  <div class="info-box info-box-purple">
+    💡 <strong>The key insight:</strong> ALARM is not 5 separate named levels — it's a <em>matrix</em> or spectrum. Key words on the left require short, factual answers. Key words on the right demand longer, higher-order responses with evidence, reasoning, and judgement. The mark allocation of a question usually signals where on the matrix it sits.
+  </div>
+
+  <div class="alarm-levels" id="alarmMatrix"></div>
+
+  <div class="card">
+    <div class="card-title">How to use ALARM in an exam</div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>1. Spot the <strong>directive verb</strong> in the question (e.g. "Explain", "Evaluate")</span></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>2. Locate it on the ALARM matrix — how deep does your answer need to go?</span></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>3. Check the <strong>mark allocation</strong> — more marks = more depth needed</span></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>4. Plan your response using VSCC structure (Verb, Subject, Criteria, Content)</span></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>5. Write at the correct depth — don't just describe when asked to evaluate!</span></div>
+  </div>
+
+  <div class="info-box info-box-amber">
+    ⚠️ <strong>Common mistake:</strong> Students who write "describe" answers for "evaluate" questions miss marks even when their facts are correct. ALARM helps you avoid this.
+  </div>
+
+  <div style="margin-top:1rem;">
+    <button class="btn btn-primary" onclick="goTab(1)">Next: NESA Key Words →</button>
+  </div>
+</div>
+
+<!-- ══ TAB 1: NESA KEY WORDS ══ -->
+<div class="tab-content" id="tab1">
+  <div class="section-heading">NESA Key Words</div>
+  <p class="section-sub">These are the directive verbs NESA uses in HSC exams across all subjects. Each word signals exactly how to structure your answer. Use the ALARM matrix to determine the depth required.</p>
+
+  <div class="info-box info-box-purple" style="margin-bottom:1.25rem;">
+    🎯 Each key word below shows its ALARM level and what you must include in your response for full marks. Note: the same verb may require slightly different treatment depending on the subject.
+  </div>
+
+  <div id="keyWordsList"></div>
+
+  <!-- Verb Sort Activity -->
+  <div class="card" style="margin-top:1.5rem;">
+    <div class="card-title">Activity — Sort the Verb</div>
+    <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem;">Click a key word below, then select its correct ALARM level. How well do you know them?</p>
+    <div id="verbSortArea"></div>
+    <div id="verbSortFeedback" style="min-height:1.2em;font-size:0.85rem;margin-top:0.5rem;"></div>
+    <div class="flex-row" style="margin-top:0.75rem;">
+      <button class="btn btn-secondary" onclick="resetVerbSort()">Reset Activity</button>
+    </div>
+  </div>
+
+  <div style="margin-top:1rem;display:flex;gap:0.75rem;">
+    <button class="btn btn-secondary" onclick="goTab(0)">← Back</button>
+    <button class="btn btn-primary" onclick="goTab(2)">Next: VSCC Breakdown →</button>
+  </div>
+</div>
+
+<!-- ══ TAB 2: VSCC BREAKDOWN ══ -->
+<div class="tab-content" id="tab2">
+  <div class="section-heading">VSCC Breakdown</div>
+  <p class="section-sub">Before writing, decode the question using <strong>VSCC</strong>: identify the <strong>Verb</strong>, <strong>Subject</strong>, <strong>Criteria</strong>, and plan your <strong>Content</strong>. This ensures you answer exactly what is asked.</p>
+
+  <div class="card">
+    <div class="card-title">What is VSCC?</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.75rem;">
+      <div style="background:rgba(79,255,176,0.06);border:1px solid rgba(79,255,176,0.2);border-radius:8px;padding:0.75rem;">
+        <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--accent);margin-bottom:0.2rem;">V</div>
+        <div style="font-weight:600;font-size:0.85rem;margin-bottom:0.2rem;">Verb</div>
+        <div style="font-size:0.78rem;color:var(--muted);">The directive word — tells you <em>how</em> to answer (e.g. Explain, Evaluate)</div>
+      </div>
+      <div style="background:rgba(124,111,255,0.06);border:1px solid rgba(124,111,255,0.2);border-radius:8px;padding:0.75rem;">
+        <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--accent4);margin-bottom:0.2rem;">S</div>
+        <div style="font-weight:600;font-size:0.85rem;margin-bottom:0.2rem;">Subject</div>
+        <div style="font-size:0.78rem;color:var(--muted);">The topic the question is about (e.g. cloud computing, firewalls)</div>
+      </div>
+      <div style="background:rgba(255,183,77,0.06);border:1px solid rgba(255,183,77,0.2);border-radius:8px;padding:0.75rem;">
+        <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--explain-c);margin-bottom:0.2rem;">C</div>
+        <div style="font-weight:600;font-size:0.85rem;margin-bottom:0.2rem;">Criteria</div>
+        <div style="font-size:0.78rem;color:var(--muted);">Any specific conditions or focus (e.g. "in terms of cost", "for SMEs")</div>
+      </div>
+      <div style="background:rgba(206,147,216,0.06);border:1px solid rgba(206,147,216,0.2);border-radius:8px;padding:0.75rem;">
+        <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--evaluate-c);margin-bottom:0.2rem;">C</div>
+        <div style="font-weight:600;font-size:0.85rem;margin-bottom:0.2rem;">Content</div>
+        <div style="font-size:0.78rem;color:var(--muted);">The knowledge, examples and evidence you'll include</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-title" style="margin-top:1.25rem;margin-bottom:0.5rem;">Part A — Explicit Verb Questions</div>
+  <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem;">The directive verb is clearly stated. Identify each component.</p>
+  <div id="vsccPractice"></div>
+
+  <div class="card-title" style="margin-top:1.5rem;margin-bottom:0.5rem;">Part B — Hidden Verb Questions</div>
+  <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem;">Some questions hide the directive verb behind phrasing like "In what ways…" or "To what extent…". You must identify the implied verb before decoding the rest.</p>
+  <div id="vsccHidden"></div>
+
+  <div style="margin-top:1rem;display:flex;gap:0.75rem;">
+    <button class="btn btn-secondary" onclick="goTab(1)">← Back</button>
+    <button class="btn btn-primary" onclick="goTab(3)">Next: Build a Response →</button>
+  </div>
+</div>
+
+<!-- ══ TAB 3: BUILD A RESPONSE ══ -->
+<div class="tab-content" id="tab3">
+  <div class="section-heading">Build a Response</div>
+  <p class="section-sub">Select a question, then write each part of your response step-by-step. The tool assembles it and colour-codes each section.</p>
+
+  <div id="qSelector"></div>
+
+  <div id="builderArea" style="display:none;">
+    <div class="card" id="builderQuestionCard">
+      <div class="card-title">Selected Question</div>
+      <div id="builderQText" style="font-size:0.92rem;font-weight:600;line-height:1.55;margin-bottom:0.5rem;"></div>
+      <div id="builderQMeta" style="font-size:0.78rem;color:var(--muted);display:flex;gap:0.75rem;flex-wrap:wrap;"></div>
+    </div>
+
+    <div id="builderSteps"></div>
+
+    <div class="flex-row" style="margin-bottom:1.25rem;">
+      <button class="btn btn-primary" onclick="assembleResponse()">Assemble Response ↓</button>
+      <button class="btn btn-secondary" onclick="clearBuilder()">Clear</button>
+    </div>
+
+    <div id="assembledResponse" style="display:none;" class="card">
+      <div class="card-title">Your Assembled Response</div>
+      <div id="assembledContent"></div>
+    </div>
+  </div>
+
+  <!-- Structure Templates -->
+  <div style="margin-top:1.75rem;">
+    <div class="card-title" style="margin-bottom:0.5rem;">Response Structure Templates by ALARM Level</div>
+    <div id="structureTemplates"></div>
+  </div>
+
+  <div style="margin-top:1rem;display:flex;gap:0.75rem;">
+    <button class="btn btn-secondary" onclick="goTab(2)">← Back</button>
+    <button class="btn btn-primary" onclick="goTab(4)">Next: Level Grader →</button>
+  </div>
+</div>
+
+<!-- ══ TAB 4: LEVEL GRADER ══ -->
+<div class="tab-content" id="tab4">
+  <div class="section-heading">Level Grader</div>
+  <p class="section-sub">Read each sample response and judge which ALARM level it demonstrates. No level labels are shown — judge from the depth of thinking alone.</p>
+
+  <div class="info-box info-box-amber" style="margin-bottom:1.25rem;">
+    🔍 <strong>Questions with a <span class="hidden-verb-badge">HIDDEN VERB</span></strong> require you to identify the implied directive first.
+  </div>
+
+  <div id="graderQuestions"></div>
+
+  <div style="margin-top:1rem;display:flex;gap:0.75rem;">
+    <button class="btn btn-secondary" onclick="goTab(3)">← Back</button>
+    <button class="btn btn-primary" onclick="goTab(5)">Next: Final Check →</button>
+  </div>
+</div>
+
+<!-- ══ TAB 5: FINAL CHECK ══ -->
+<div class="tab-content" id="tab5">
+  <div class="section-heading">Final Check</div>
+  <p class="section-sub">Quick reference and quiz — make sure you've got the key concepts locked in before your exam.</p>
+
+  <!-- Quick Ref -->
+  <div class="card">
+    <div class="card-title">ALARM Quick Reference — Mark & Depth Guide</div>
+    <div class="mark-row">
+      <span class="mark-pill" style="color:var(--identify-c);border-color:var(--identify-c);">1–2 marks</span>
+      <span style="font-size:0.83rem;"><strong>Identify / Define / List / Recall / Name</strong> — one or two sentences, factual only</span>
+    </div>
+    <div class="mark-row">
+      <span class="mark-pill" style="color:var(--describe-c);border-color:var(--describe-c);">2–4 marks</span>
+      <span style="font-size:0.83rem;"><strong>Describe / Outline / Summarise / Classify</strong> — key features with some detail</span>
+    </div>
+    <div class="mark-row">
+      <span class="mark-pill" style="color:var(--explain-c);border-color:var(--explain-c);">4–6 marks</span>
+      <span style="font-size:0.83rem;"><strong>Explain / Compare / Contrast / Apply</strong> — cause & effect, reason why, examples required</span>
+    </div>
+    <div class="mark-row">
+      <span class="mark-pill" style="color:var(--analyse-c);border-color:var(--analyse-c);">6–8 marks</span>
+      <span style="font-size:0.83rem;"><strong>Analyse / Examine / Discuss / Interpret</strong> — components + relationships + implications</span>
+    </div>
+    <div class="mark-row">
+      <span class="mark-pill" style="color:var(--evaluate-c);border-color:var(--evaluate-c);">8+ marks</span>
+      <span style="font-size:0.83rem;"><strong>Evaluate / Assess / Justify / Recommend</strong> — judgement with supported criteria, pros/cons</span>
+    </div>
+    <div class="mark-row">
+      <span class="mark-pill" style="color:var(--critically-c);border-color:var(--critically-c);">Extended</span>
+      <span style="font-size:0.83rem;"><strong>Critically Analyse / Critically Evaluate</strong> — all of the above + challenge assumptions, limitations</span>
+    </div>
+  </div>
+
+  <!-- VSCC Checklist -->
+  <div class="card">
+    <div class="card-title">Pre-Write VSCC Checklist</div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>I have identified the <strong>directive verb</strong> and located it on the ALARM</span></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>I know the <strong>subject</strong> — exactly what the question is about</span></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>I have noted any <strong>criteria/conditions</strong> in the question</span></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>I have planned the <strong>content</strong> — key points, examples, evidence</span></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>My response depth matches the <strong>mark allocation</strong></span></div>
+    <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span>I have not merely described when a higher-order verb was used</span></div>
+  </div>
+
+  <!-- Final Quiz -->
+  <div class="card">
+    <div class="card-title">Final Quiz — 6 Questions</div>
+    <div id="finalQuizContent"></div>
+    <div class="flex-row" style="margin-top:1rem;">
+      <button class="btn btn-primary" onclick="scoreFinalQuiz()">Submit Quiz</button>
+      <button class="btn btn-secondary" onclick="resetFinalQuiz()">Reset</button>
+    </div>
+    <div class="score-circle" id="scoreCircle" style="display:none;margin-top:1.5rem;">
+      <div id="finalScoreNum">0/6</div>
+      <div class="score-label">Score</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ TEACHER PANEL ══════════════════ -->
+<div id="teacherOverlay">
+  <div id="teacherPanel">
+    <div style="background:var(--surface2);border-bottom:1px solid var(--border);padding:1.1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="font-family:'Syne',monospace;font-size:0.62rem;color:var(--accent3);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.2rem;">⚙ Teacher Panel</div>
+        <div style="font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:800;">Custom Questions & GitHub Sync</div>
+      </div>
+      <button onclick="closeTeacherPanel()" style="background:transparent;border:1px solid var(--border2);color:var(--muted);border-radius:6px;padding:0.35rem 0.8rem;cursor:pointer;font-size:0.8rem;font-family:'Instrument Sans',sans-serif;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--accent2)';this.style.color='var(--accent2)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted)'">✕ Close</button>
+    </div>
+
+    <!-- Login -->
+    <div id="tpLogin" style="padding:2.5rem 1.5rem;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">🔐</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:0.3rem;">Teacher Access</div>
+      <div style="font-size:0.83rem;color:var(--muted);margin-bottom:1.5rem;">Enter the teacher password to manage custom questions for your class.</div>
+      <div style="max-width:300px;margin:0 auto;">
+        <input type="password" id="tpPasswordInput" placeholder="Enter password" class="field-input" style="text-align:center;letter-spacing:0.12em;margin-bottom:0.65rem;" onkeydown="if(event.key==='Enter')checkTeacherPassword()">
+        <button onclick="checkTeacherPassword()" class="btn btn-primary" style="width:100%;">Unlock Panel</button>
+        <div id="tpLoginError" style="color:var(--accent2);font-size:0.78rem;margin-top:0.5rem;min-height:1.2em;"></div>
+        <div class="info-box info-box-amber" style="margin-top:1rem;font-size:0.76rem;">Default password: <code style="font-family:'Syne',monospace;color:var(--accent3);">teacher2025</code></div>
+      </div>
+    </div>
+
+    <!-- Main -->
+    <div id="tpMain" style="display:none;">
+      <div class="tp-tab-bar">
+        <button class="tp-tab-btn active" id="tpTab0" onclick="switchTpTab(0)">Add Question</button>
+        <button class="tp-tab-btn" id="tpTab1" onclick="switchTpTab(1)">Manage</button>
+        <button class="tp-tab-btn" id="tpTab2" onclick="switchTpTab(2)">Settings</button>
+        <button class="tp-tab-btn" id="tpTab3" onclick="switchTpTab(3)">🐙 GitHub Sync</button>
+      </div>
+
+      <div style="padding:1.5rem;">
+
+        <!-- TAB 0: ADD QUESTION -->
+        <div id="tpSection0">
+          <p style="font-size:0.83rem;color:var(--muted);margin-bottom:1.1rem;line-height:1.6;">Add a question that appears in Session 4 (Build a Response) for your students. Scaffold each step with hints and sentence starters.</p>
+          <div class="vscc-full">
+            <label class="field-label">Question Text *</label>
+            <textarea id="tpQText" rows="3" class="field-textarea" placeholder="e.g. Evaluate the effectiveness of multi-factor authentication in securing enterprise systems."></textarea>
+          </div>
+          <div class="vscc-row">
+            <div>
+              <label class="field-label">Key Verb *</label>
+              <input type="text" id="tpQVerb" class="field-input" placeholder="e.g. Evaluate">
+            </div>
+            <div>
+              <label class="field-label">ALARM Level *</label>
+              <select id="tpQLevel" class="field-select">
+                <option value="">— Select level —</option>
+                <option value="Identify">Identify</option>
+                <option value="Describe">Describe</option>
+                <option value="Explain">Explain</option>
+                <option value="Analyse">Analyse</option>
+                <option value="Evaluate">Evaluate</option>
+                <option value="Critically Analyse">Critically Analyse</option>
+                <option value="Critically Evaluate">Critically Evaluate</option>
+              </select>
+            </div>
+          </div>
+          <div style="margin-bottom:1.1rem;">
+            <label class="field-label">Marks Available (optional)</label>
+            <input type="number" id="tpQMarks" class="field-input" min="1" max="20" placeholder="e.g. 6" style="width:120px;">
+          </div>
+          <div style="margin-bottom:0.75rem;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;">
+              <div>
+                <div class="field-label" style="margin-bottom:0;">Response Scaffolding Steps</div>
+                <div style="font-size:0.75rem;color:var(--muted);margin-top:0.15rem;">Guide students step-by-step through their response.</div>
+              </div>
+              <button onclick="addScaffoldStep()" class="btn btn-secondary" style="font-size:0.75rem;padding:0.3rem 0.7rem;white-space:nowrap;margin-left:0.75rem;">+ Step</button>
+            </div>
+            <div id="tpStepsContainer"></div>
+          </div>
+          <div id="tpAddError" style="color:var(--accent2);font-size:0.8rem;margin-bottom:0.6rem;min-height:1.1em;"></div>
+          <div class="flex-row">
+            <button onclick="saveTeacherQuestion()" class="btn btn-primary">Save Question →</button>
+            <button onclick="clearTeacherForm()" class="btn btn-secondary">Clear Form</button>
+          </div>
+          <div id="tpSaveSuccess" style="display:none;margin-top:0.75rem;" class="info-box info-box-green"></div>
+        </div>
+
+        <!-- TAB 1: MANAGE -->
+        <div id="tpSection1" style="display:none;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.85rem;">
+            <div style="font-size:0.83rem;color:var(--muted);">All custom questions. Students see these in Session 4.</div>
+            <button onclick="exportQuestions()" class="btn btn-secondary" style="font-size:0.72rem;padding:0.3rem 0.75rem;">Export JSON</button>
+          </div>
+          <div id="tpQuestionList"></div>
+          <div id="tpEmptyState" style="display:none;text-align:center;padding:2.5rem;color:var(--muted);">
+            <div style="font-size:2rem;margin-bottom:0.5rem;">📋</div>
+            <div style="font-weight:600;margin-bottom:0.25rem;">No custom questions yet</div>
+            <div style="font-size:0.8rem;">Switch to Add Question to create your first one.</div>
+          </div>
+        </div>
+
+        <!-- TAB 2: SETTINGS -->
+        <div id="tpSection2" style="display:none;">
+          <div style="margin-bottom:1.5rem;">
+            <div class="field-label" style="margin-bottom:0.5rem;">Change Teacher Password</div>
+            <div class="vscc-row" style="max-width:440px;margin-bottom:0.65rem;">
+              <div>
+                <label class="field-label">New Password</label>
+                <input type="password" id="tpNewPw" class="field-input" placeholder="New password">
+              </div>
+              <div>
+                <label class="field-label">Confirm</label>
+                <input type="password" id="tpConfirmPw" class="field-input" placeholder="Confirm">
+              </div>
+            </div>
+            <button onclick="changePassword()" class="btn btn-accent4">Update Password</button>
+            <div id="tpPwMsg" style="font-size:0.78rem;margin-top:0.45rem;min-height:1.1em;"></div>
+          </div>
+          <hr class="divider">
+          <div style="margin-bottom:1.5rem;">
+            <div class="field-label" style="margin-bottom:0.5rem;">Display Settings</div>
+            <label style="display:flex;align-items:center;gap:0.65rem;cursor:pointer;font-size:0.85rem;margin-bottom:0.65rem;">
+              <input type="checkbox" id="tpShowTeacherQFirst" style="accent-color:var(--accent4);width:15px;height:15px;" checked>
+              Show teacher questions at the top of Session 4
+            </label>
+            <label style="display:flex;align-items:center;gap:0.65rem;cursor:pointer;font-size:0.85rem;">
+              <input type="checkbox" id="tpHideBuiltIn" style="accent-color:var(--accent4);width:15px;height:15px;">
+              Hide built-in example questions
+            </label>
+            <button onclick="saveDisplaySettings()" class="btn btn-accent4" style="margin-top:0.85rem;">Save Settings</button>
+            <div id="tpSettingsMsg" style="font-size:0.78rem;margin-top:0.4rem;min-height:1.1em;color:var(--accent);"></div>
+          </div>
+          <hr class="divider">
+          <div>
+            <div class="field-label" style="color:var(--accent2);margin-bottom:0.5rem;">Danger Zone</div>
+            <button onclick="clearAllTeacherQuestions()" class="btn btn-secondary" style="border-color:var(--accent2);color:var(--accent2);">Delete All Custom Questions</button>
+          </div>
+        </div>
+
+        <!-- TAB 3: GITHUB SYNC -->
+        <div id="tpSection3" style="display:none;">
+          <div id="ghStatusBanner" style="display:none;" class="info-box" style="margin-bottom:1.25rem;"></div>
+          <div class="info-box info-box-purple" style="margin-bottom:1.25rem;">
+            <strong style="color:#b0aaf0;">How this works:</strong><br>
+            Click <strong>Publish to GitHub</strong> to write your questions as <code style="font-family:'Syne',monospace;font-size:0.78rem;">questions.json</code> directly into your GitHub repo. Every student who opens the page fetches it automatically — no file uploads, no manual steps. You need a GitHub Personal Access Token (PAT) with Contents: Read & Write permission.
+          </div>
+          <div class="vscc-row" style="margin-bottom:0.65rem;">
+            <div><label class="field-label">GitHub Username *</label><input type="text" id="ghOwner" class="field-input" placeholder="yourname"></div>
+            <div><label class="field-label">Repository Name *</label><input type="text" id="ghRepo" class="field-input" placeholder="alarm-writing-coach"></div>
+          </div>
+          <div class="vscc-row" style="margin-bottom:0.65rem;">
+            <div><label class="field-label">Branch (default: main)</label><input type="text" id="ghBranch" class="field-input" placeholder="main"></div>
+            <div><label class="field-label">File Path (default: questions.json)</label><input type="text" id="ghPath" class="field-input" placeholder="questions.json"></div>
+          </div>
+          <div style="margin-bottom:1.1rem;">
+            <label class="field-label">Personal Access Token (PAT) *
+              <a href="https://github.com/settings/tokens/new?description=ALARM+Writing+Coach&scopes=repo" target="_blank" style="color:var(--accent4);text-decoration:none;font-size:0.68rem;margin-left:0.4rem;">↗ Create on GitHub</a>
+            </label>
+            <div style="position:relative;">
+              <input type="password" id="ghToken" class="field-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" style="padding-right:2.5rem;">
+              <button onclick="toggleTokenVisibility()" style="position:absolute;right:0.5rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.85rem;padding:0;">👁</button>
+            </div>
+            <div style="font-size:0.72rem;color:var(--muted);margin-top:0.25rem;">Stored in your browser only. Never transmitted anywhere except api.github.com.</div>
+          </div>
+          <div class="flex-row" style="margin-bottom:1rem;">
+            <button onclick="saveGhConfig()" class="btn btn-accent4">Save Config</button>
+            <button onclick="testGhConnection()" class="btn btn-secondary">Test Connection</button>
+            <button onclick="publishToGitHub()" id="ghPublishBtn" class="btn btn-primary">🚀 Publish to GitHub</button>
+          </div>
+          <div id="ghActionMsg" style="font-size:0.83rem;min-height:1.2em;line-height:1.6;"></div>
+          <hr class="divider">
+          <div class="field-label" style="margin-bottom:0.5rem;">How to create a Fine-Grained PAT (step by step)</div>
+          <ol style="font-size:0.8rem;color:var(--muted);line-height:2.1;padding-left:1.25rem;">
+            <li>Go to <strong style="color:var(--text);">github.com → Settings → Developer settings → Personal access tokens → Fine-grained tokens</strong></li>
+            <li>Click <strong style="color:var(--text);">Generate new token</strong></li>
+            <li>Give it a name (e.g. ALARM Writing Coach) and set an expiry</li>
+            <li>Set <strong style="color:var(--text);">Repository access</strong> to <em>Only select repositories</em> → choose your repo</li>
+            <li>Under <strong style="color:var(--text);">Repository permissions</strong>, set <strong style="color:var(--text);">Contents → Read and write</strong></li>
+            <li>Scroll down and click <strong style="color:var(--text);">Generate token</strong> — copy it immediately (only shown once!)</li>
+            <li>Paste it into the PAT field above and click <strong style="color:var(--text);">Save Config</strong></li>
+          </ol>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// ALARM DATA — correct framework: A Learning and Responding Matrix
+// Key words grouped by depth, aligned to NESA glossary
+// ─────────────────────────────────────────────
+const alarmLevels = [
+  {
+    id: 'identify',
+    name: 'Identify / Define / List',
+    color: 'var(--identify-c)',
+    cls: 'level-identify',
+    what: 'Recall and state factual information. Shortest responses — typically 1–2 sentences.',
+    marks: '1–2 marks',
+    verbs: ['identify','define','list','name','state','recall','locate','recognise','label'],
+    structure: [
+      { label: 'State the fact', hint: 'Name or list the item(s) directly.', starter: 'A [topic] is...' },
+      { label: 'Brief detail (if needed)', hint: 'Add one sentence of context only if required.', starter: 'It is characterised by...' }
+    ]
+  },
+  {
+    id: 'describe',
+    name: 'Describe / Outline',
+    color: 'var(--describe-c)',
+    cls: 'level-describe',
+    what: 'Give key features, characteristics or a sequence of events. No need for cause/effect — just what.',
+    marks: '2–4 marks',
+    verbs: ['describe','outline','summarise','classify','recount','account for','give an account of'],
+    structure: [
+      { label: 'Identify the subject', hint: 'State what you are describing.', starter: '[Topic] is a...' },
+      { label: 'Key features', hint: 'Describe 2–3 main characteristics or steps.', starter: 'Its main features include...' },
+      { label: 'Example', hint: 'Give a real-world or subject-specific example.', starter: 'For example, in Enterprise Computing...' }
+    ]
+  },
+  {
+    id: 'explain',
+    name: 'Explain / Compare / Apply',
+    color: 'var(--explain-c)',
+    cls: 'level-explain',
+    what: 'Show how or why something works. Include cause-and-effect and link ideas. More depth than describe.',
+    marks: '4–6 marks',
+    verbs: ['explain','compare','contrast','apply','distinguish','predict','propose','extrapolate','interpret'],
+    structure: [
+      { label: 'State the concept', hint: 'Briefly define/introduce the topic.', starter: '[Topic] refers to...' },
+      { label: 'Explain how/why', hint: 'Describe the mechanism, process or cause-effect relationship.', starter: 'This works because...' },
+      { label: 'Link to implications', hint: 'What does this mean in practice?', starter: 'As a result...' },
+      { label: 'Example', hint: 'Ground it with a specific real-world example.', starter: 'For instance, in an enterprise setting...' }
+    ]
+  },
+  {
+    id: 'analyse',
+    name: 'Analyse / Examine / Discuss',
+    color: 'var(--analyse-c)',
+    cls: 'level-analyse',
+    what: 'Break into components, identify relationships and draw out implications. Go beyond description.',
+    marks: '6–8 marks',
+    verbs: ['analyse','examine','discuss','investigate','interpret','deduce','synthesise'],
+    structure: [
+      { label: 'Introduce the topic', hint: 'Set context for your analysis.', starter: '[Topic] is significant because...' },
+      { label: 'Identify components', hint: 'Break the issue into its key parts.', starter: 'The key components are...' },
+      { label: 'Explore relationships', hint: 'How do the parts interact? What patterns emerge?', starter: 'The relationship between X and Y demonstrates...' },
+      { label: 'Implications', hint: 'What does this mean — impacts, effects, or consequences?', starter: 'This suggests that...' },
+      { label: 'Supported example', hint: 'Use evidence or a specific case.', starter: 'This is evident in...' }
+    ]
+  },
+  {
+    id: 'evaluate',
+    name: 'Evaluate / Assess / Justify',
+    color: 'var(--evaluate-c)',
+    cls: 'level-evaluate',
+    what: 'Make a judgement based on criteria. Weigh up strengths and limitations. State a supported conclusion.',
+    marks: '8+ marks',
+    verbs: ['evaluate','assess','justify','recommend','to what extent','argue','determine'],
+    structure: [
+      { label: 'Introduce the question', hint: 'Restate what is being evaluated and your position.', starter: 'The effectiveness of [topic] can be evaluated by...' },
+      { label: 'Strengths / advantages', hint: 'Present evidence for.', starter: 'On one hand, [topic] is effective because...' },
+      { label: 'Limitations / counter-argument', hint: 'Present evidence against.', starter: 'However, a limitation is...' },
+      { label: 'Weigh up', hint: 'Compare the strength of both sides.', starter: 'Weighing these factors...' },
+      { label: 'Conclusion with judgement', hint: 'Make a clear, supported verdict.', starter: 'Overall, it can be concluded that...' }
+    ]
+  },
+  {
+    id: 'critically',
+    name: 'Critically Analyse / Evaluate',
+    color: 'var(--critically-c)',
+    cls: 'level-critically',
+    what: 'All elements of evaluate/analyse PLUS challenge assumptions, address limitations, and explore alternatives.',
+    marks: 'Extended / Essay',
+    verbs: ['critically analyse','critically evaluate','account for (complex)','justify with evidence'],
+    structure: [
+      { label: 'Contextualise the debate', hint: 'Set the broader context and state your position.', starter: 'The question of [topic] is contested because...' },
+      { label: 'Analyse components in depth', hint: 'Break down each key element with relationships.', starter: 'At its core, [aspect] functions by...' },
+      { label: 'Challenge assumptions', hint: 'What is assumed? What evidence challenges this?', starter: 'While it is commonly assumed that..., evidence suggests...' },
+      { label: 'Evaluate strengths & limits', hint: 'Weigh multiple perspectives with criteria.', starter: 'When evaluated against the criterion of...' },
+      { label: 'Explore alternatives', hint: 'Are there other approaches or interpretations?', starter: 'An alternative perspective holds that...' },
+      { label: 'Substantiated conclusion', hint: 'Commit to a position with full justification.', starter: 'Taking all evidence into account...' }
+    ]
+  }
+];
+
+// NESA Key Words detail list
+const nesaKeyWords = [
+  { verb:'Account for', level:'explain', def:'State reasons for, or report on. Give an account of = narrate a series of events.' },
+  { verb:'Analyse', level:'analyse', def:'Identify components and the relationships between them; draw out and relate implications.' },
+  { verb:'Apply', level:'explain', def:'Use knowledge and understanding in a given context or situation.' },
+  { verb:'Appreciate', level:'evaluate', def:'Make a judgement about the value or significance of something.' },
+  { verb:'Assess', level:'evaluate', def:'Make a judgement of value, quality, outcomes, results or size.' },
+  { verb:'Calculate', level:'explain', def:'Determine a value or result through computation, with working shown.' },
+  { verb:'Clarify', level:'explain', def:'Make clear or plain, providing additional detail or examples.' },
+  { verb:'Classify', level:'describe', def:'Arrange or group into categories, classes or types.' },
+  { verb:'Compare', level:'explain', def:'Show how things are similar and different.' },
+  { verb:'Construct', level:'analyse', def:'Make, build or put together something (diagram, argument, solution).' },
+  { verb:'Contrast', level:'explain', def:'Show how things are different from each other.' },
+  { verb:'Critically analyse', level:'critically', def:'Identify components, relationships and implications while challenging assumptions and considering alternatives.' },
+  { verb:'Critically evaluate', level:'critically', def:'Weigh up with criteria and evidence, challenge underlying assumptions, consider limitations.' },
+  { verb:'Deduce', level:'analyse', def:'Reach a conclusion by reasoning from general principles or evidence.' },
+  { verb:'Define', level:'identify', def:'Give the precise meaning of a word, phrase, concept or physical quantity.' },
+  { verb:'Describe', level:'describe', def:'Provide characteristics and features of a subject.' },
+  { verb:'Discuss', level:'analyse', def:'Identify issues and provide points for and/or against.' },
+  { verb:'Distinguish', level:'explain', def:'Recognise or note/indicate as being distinct or different from.' },
+  { verb:'Evaluate', level:'evaluate', def:'Make a judgement based on criteria; determine the value of.' },
+  { verb:'Examine', level:'analyse', def:'Inquire into and investigate in detail every feature, characteristic and purpose.' },
+  { verb:'Explain', level:'explain', def:'Relate cause and effect; make the relationships between things evident; provide why and/or how.' },
+  { verb:'Extract', level:'describe', def:'Choose relevant and/or important information from a text or source.' },
+  { verb:'Extrapolate', level:'explain', def:'Infer or estimate beyond a known range using known values.' },
+  { verb:'Identify', level:'identify', def:'Recognise and name.' },
+  { verb:'Interpret', level:'analyse', def:'Draw meaning from; make sense of or explain the significance of.' },
+  { verb:'Investigate', level:'analyse', def:'Examine facts and details about something; research to determine value, accuracy or worth.' },
+  { verb:'Justify', level:'evaluate', def:'Support an argument or conclusion with evidence; show why a decision or action was taken.' },
+  { verb:'List', level:'identify', def:'Give a number of points, items or events, generally without elaboration.' },
+  { verb:'Outline', level:'describe', def:'Sketch in general terms; indicate the main features or different parts.' },
+  { verb:'Predict', level:'explain', def:'Suggest what may happen based on available information.' },
+  { verb:'Propose', level:'explain', def:'Put forward a plan or suggestion for consideration.' },
+  { verb:'Recall', level:'identify', def:'Remember and reproduce information.' },
+  { verb:'Recommend', level:'evaluate', def:'Suggest an appropriate response, citing relevant evidence.' },
+  { verb:'Recount', level:'describe', def:'Retell a series of events.' },
+  { verb:'Summarise', level:'describe', def:'Express concisely the relevant details of a longer piece of work.' },
+  { verb:'Synthesise', level:'analyse', def:'Combine elements to form a new whole; draw together information from multiple sources.' },
+];
+
+// Verb match activity data
+const verbMatchData = [
+  { verb: 'Justify', correct: 'evaluate' },
+  { verb: 'Outline', correct: 'describe' },
+  { verb: 'Synthesise', correct: 'analyse' },
+  { verb: 'List', correct: 'identify' },
+  { verb: 'Contrast', correct: 'explain' },
+  { verb: 'Critically evaluate', correct: 'critically' },
+  { verb: 'Examine', correct: 'analyse' },
+  { verb: 'Define', correct: 'identify' },
+  { verb: 'Recommend', correct: 'evaluate' },
+  { verb: 'Extrapolate', correct: 'explain' },
+];
+
+// VSCC Practice Qs (explicit verb)
+const vsccQs = [
+  { q:'Explain the role of firewalls in protecting enterprise networks from external threats.', verb:'Explain', s:'firewalls', c:'protecting enterprise networks from external threats', level:'Explain', hint:'Link cause and effect — what do firewalls do and why does that matter?' },
+  { q:'Describe the key features of a relational database management system.', verb:'Describe', s:'RDBMS', c:'key features', level:'Describe', hint:'List and characterise the main features — no need for cause/effect.' },
+  { q:'Evaluate the effectiveness of multi-factor authentication in securing enterprise systems.', verb:'Evaluate', s:'multi-factor authentication', c:'effectiveness in securing enterprise systems', level:'Evaluate', hint:'You need both strengths and limitations, then a judgement.' },
+  { q:'Analyse how cloud computing has changed data management practices for large organisations.', verb:'Analyse', s:'cloud computing', c:'data management practices for large organisations', level:'Analyse', hint:'Identify components, relationships and implications — not just features.' },
+];
+
+// VSCC Hidden Verb Qs
+const vsccHiddenQs = [
+  { q:'In what ways does virtualisation reduce operational costs for enterprises?', clue:'"In what ways" asks you to show cause-and-effect relationships.', impliedVerb:'Explain', v:'Explain', s:'virtualisation', c:'reducing operational costs for enterprises', level:'Explain', hint:'Show the mechanism — how does virtualisation cause cost reductions?', wrongVerbs:['Describe','Evaluate','List'] },
+  { q:'To what extent do cybersecurity frameworks protect enterprise data?', clue:'"To what extent" asks for a judgement — how much, under what conditions.', impliedVerb:'Evaluate', v:'Evaluate', s:'cybersecurity frameworks', c:'protecting enterprise data', level:'Evaluate', hint:'Weigh the evidence on both sides — when they work and when they don\'t.', wrongVerbs:['Explain','Describe','Analyse'] },
+  { q:'What are the steps involved in implementing a BYOD policy?', clue:'"What are the steps" asks for a sequence.', impliedVerb:'Outline', v:'Outline', s:'implementing a BYOD policy', c:'steps involved', level:'Describe', hint:'Give an ordered overview of the process — not detailed cause/effect.', wrongVerbs:['Analyse','Evaluate','Explain'] },
+  { q:'How does poor database design lead to data integrity issues?', clue:'"How does" asks for cause-and-effect relationships.', impliedVerb:'Explain', v:'Explain', s:'poor database design', c:'data integrity issues', level:'Explain', hint:'Trace the mechanism from cause (poor design) to effect (data issues).', wrongVerbs:['Describe','Evaluate','List'] },
+];
+
+// Builder Qs (built-in)
+const builderQs = [
+  {
+    q:'Describe the network infrastructure required to support a remote workforce.',
+    verb:'Describe', level:'Describe', marks:4,
+    steps: [
+      { label:'Define the topic', hint:'Briefly state what network infrastructure means in this context.', starter:'Network infrastructure refers to...' },
+      { label:'Key components', hint:'Name and describe 2–3 essential components (e.g. VPN, routers, bandwidth).', starter:'The key components include...' },
+      { label:'How they support remote work', hint:'Explain the role of each component for remote workers.', starter:'These components support remote work by...' },
+      { label:'Real-world example', hint:'Give a specific example of an enterprise using this infrastructure.', starter:'For example, a company like...' }
+    ]
+  },
+  {
+    q:'Explain how the ASD Essential Eight strategies mitigate cybersecurity risks.',
+    verb:'Explain', level:'Explain', marks:6,
+    steps: [
+      { label:'Introduce the Essential Eight', hint:'Briefly identify what the Essential Eight is.', starter:'The ASD Essential Eight is a framework that...' },
+      { label:'Key strategies', hint:'Identify 2–3 key strategies and what they do.', starter:'Key strategies include...' },
+      { label:'Cause and effect', hint:'Explain HOW each strategy reduces risk.', starter:'By implementing [strategy], organisations reduce risk because...' },
+      { label:'Implications', hint:'What is the overall impact of adopting this framework?', starter:'As a result, organisations that adopt the Essential Eight...' }
+    ]
+  },
+  {
+    q:'Evaluate the impact of artificial intelligence on enterprise decision-making.',
+    verb:'Evaluate', level:'Evaluate', marks:8,
+    steps: [
+      { label:'Introduce and position', hint:'State the scope of AI in enterprise decision-making and your initial position.', starter:'Artificial intelligence has increasingly influenced...' },
+      { label:'Strengths of AI in decision-making', hint:'Give at least two benefits with evidence.', starter:'AI improves decision-making by...' },
+      { label:'Limitations and risks', hint:'Give at least two concerns (bias, reliability, etc.).', starter:'However, AI also presents risks such as...' },
+      { label:'Weigh up', hint:'Which side is stronger and why?', starter:'On balance...' },
+      { label:'Conclusion with verdict', hint:'Make a clear, supported judgement.', starter:'Overall, AI has had [positive/negative/mixed] impact because...' }
+    ]
+  }
+];
+
+// Grader Qs
+const graderQs = [
+  {
+    question: 'Explain the server\'s role in a client-server network.',
+    impliedVerb: null,
+    correctLevel: 'explain',
+    correctReason: 'This response explains the cause-and-effect relationship — why the server\'s role matters and how it impacts the network. Simply listing features would only be "describe".',
+    items: shuffleArr([
+      { text: 'A server is a computer.', level: 'identify', correct: false },
+      { text: 'A server stores data and manages network resources. It has high processing power and large storage capacity.', level: 'describe', correct: false },
+      { text: 'A server manages requests from clients, providing centralised resources such as files and authentication. This means any device on the network can access shared resources without needing local copies, improving efficiency and security.', level: 'explain', correct: true },
+      { text: 'The server\'s centralisation of resources must be weighed against risks: single point of failure, high setup costs, and scalability limits. While the benefits in a large organisation are substantial, smaller firms may find cloud alternatives more cost-effective.', level: 'evaluate', correct: false },
+    ])
+  },
+  {
+    question: 'Evaluate the advantages of using open-source software in enterprise environments.',
+    impliedVerb: null,
+    correctLevel: 'evaluate',
+    correctReason: 'This response weighs strengths and limitations, uses evidence and concludes with a judgement — hallmarks of "evaluate". A response that only listed pros would only reach "describe".',
+    items: shuffleArr([
+      { text: 'Open-source software is free.', level: 'identify', correct: false },
+      { text: 'Open-source software has benefits: cost savings, community support and transparency. Drawbacks include security risks and lack of vendor support.', level: 'describe', correct: false },
+      { text: 'Open-source software reduces licensing costs and enables transparency. Organisations can audit the code for vulnerabilities. However, the lack of dedicated vendor support means higher internal IT costs, which can offset savings.', level: 'explain', correct: false },
+      { text: 'Open-source software offers significant cost advantages and community-driven security patches, making it attractive for enterprises. However, the limited vendor liability and variable documentation quality present real operational risks. For large enterprises with skilled IT teams, the benefits outweigh the risks — but smaller organisations may be better served by commercial alternatives with guaranteed SLAs.', level: 'evaluate', correct: true },
+    ])
+  },
+  {
+    question: 'Describe what a relational database is.',
+    impliedVerb: null,
+    correctLevel: 'describe',
+    correctReason: 'This response identifies and characterises the key features of a relational database without over-explaining cause/effect. It matches "describe" — giving features, not reasons why.',
+    items: shuffleArr([
+      { text: 'A database that uses tables.', level: 'identify', correct: false },
+      { text: 'A relational database organises data into tables with rows and columns. Tables are linked by primary and foreign keys. Examples include MySQL and Oracle.', level: 'describe', correct: true },
+      { text: 'A relational database uses tables linked by keys, which allows complex queries across multiple tables using SQL. This reduces data redundancy because repeated data is stored in one place and referenced elsewhere.', level: 'explain', correct: false },
+      { text: 'Relational databases offer significant data integrity advantages over flat-file systems, but their rigid schema design limits flexibility in agile development. NoSQL alternatives should be considered when data structure is unpredictable.', level: 'evaluate', correct: false },
+    ])
+  },
+  {
+    question: 'List the main cybersecurity threats facing enterprise organisations.',
+    impliedVerb: null,
+    correctLevel: 'identify',
+    correctReason: 'A simple factual list satisfies "list/identify" — no explanation or analysis is required. More detailed responses go beyond what the question asks.',
+    items: shuffleArr([
+      { text: 'Phishing, ransomware, insider threats, DDoS attacks, zero-day exploits.', level: 'identify', correct: true },
+      { text: 'Enterprise cybersecurity threats include phishing (deceptive emails), ransomware (encrypts files for payment), DDoS (floods servers) and insider threats (malicious employees).', level: 'describe', correct: false },
+      { text: 'Phishing attacks exploit human error by tricking users into revealing credentials. Ransomware encrypts data and demands payment, causing operational disruption and financial loss.', level: 'explain', correct: false },
+      { text: 'While technical threats like ransomware attract most attention, social engineering remains the greatest risk because it bypasses technical controls entirely. Organisations must weigh investment in user training against technology solutions.', level: 'evaluate', correct: false },
+    ])
+  },
+  {
+    question: 'What are the advantages and disadvantages of cloud-based ERP systems for enterprises?',
+    impliedVerb: 'Discuss/Analyse',
+    correctLevel: 'analyse',
+    correctReason: '"Advantages and disadvantages" with depth requires you to identify components, explore their relationships, and draw out implications — that\'s "analyse/discuss", not just "describe".',
+    items: shuffleArr([
+      { text: 'Cloud ERP is cheaper and easier to access.', level: 'identify', correct: false },
+      { text: 'Cloud ERP has advantages: lower upfront costs, accessibility and automatic updates. Disadvantages: internet dependency, data security concerns and vendor lock-in.', level: 'describe', correct: false },
+      { text: 'Cloud ERP reduces capital expenditure by shifting to a subscription model. This improves cash flow but creates ongoing costs. Accessibility enables remote work, but introduces data sovereignty concerns when servers are offshore — particularly relevant for regulated industries.', level: 'analyse', correct: true },
+      { text: 'Overall, cloud ERP is superior to on-premise for most SMEs due to reduced IT overhead. However, for enterprises in regulated sectors, the data risk may outweigh the savings, making a hybrid model the most defensible choice.', level: 'evaluate', correct: false },
+    ])
+  },
+  {
+    question: 'How has the shift to remote work changed cybersecurity requirements for organisations?',
+    impliedVerb: 'Explain',
+    correctLevel: 'explain',
+    correctReason: '"How has X changed Y" is asking for cause-and-effect explanation — not just a list of changes, but why the shift caused these specific requirements to emerge.',
+    items: shuffleArr([
+      { text: 'Remote work means people use VPNs and work from home.', level: 'identify', correct: false },
+      { text: 'Remote work has changed cybersecurity by requiring VPNs, MFA and endpoint security tools. Employees now use personal devices and home networks.', level: 'describe', correct: false },
+      { text: 'The shift to remote work expanded the attack surface because employees now access systems from unsecured home networks. This caused organisations to adopt Zero Trust architectures — requiring verification for every access request rather than trusting internal networks by default.', level: 'explain', correct: true },
+      { text: 'While remote work necessitated VPNs and MFA, these measures must be weighed against usability. Overly restrictive policies reduce productivity and push employees toward workarounds that create new vulnerabilities. The optimal balance depends on the organisation\'s risk profile.', level: 'evaluate', correct: false },
+    ])
+  },
+  {
+    question: 'Is artificial intelligence a reliable tool for cybersecurity threat detection?',
+    impliedVerb: 'Evaluate',
+    correctLevel: 'evaluate',
+    correctReason: '"Is X reliable for Y?" is an evaluation question — it demands a judgement supported by criteria (what makes something reliable?), with both evidence for and against.',
+    items: shuffleArr([
+      { text: 'AI can detect threats. It uses machine learning.', level: 'identify', correct: false },
+      { text: 'AI is used in cybersecurity to detect anomalies, identify malware and automate responses. It has both strengths and weaknesses.', level: 'describe', correct: false },
+      { text: 'AI improves threat detection by analysing patterns in large datasets faster than humans. It can identify zero-day threats that signature-based systems miss. However, it requires large volumes of quality training data, which many organisations lack.', level: 'analyse', correct: false },
+      { text: 'AI is a reliable tool when trained on high-quality, representative data and continuously updated — conditions difficult to sustain in practice. Its false positive rate remains a concern, as alert fatigue can cause human analysts to miss genuine threats. On balance, AI is best viewed as an enhancement to, not a replacement for, human-led security operations.', level: 'evaluate', correct: true },
+    ])
+  },
+  {
+    question: 'To what extent do software development methodologies affect project quality?',
+    impliedVerb: 'Evaluate',
+    correctLevel: 'evaluate',
+    correctReason: '"To what extent" is always an evaluation — it asks how much and under what conditions, requiring a nuanced judgement rather than just analysis.',
+    items: shuffleArr([
+      { text: 'Agile and Waterfall are both methodologies. They affect quality differently.', level: 'describe', correct: false },
+      { text: 'Agile\'s iterative approach allows continuous testing, improving quality over time. Waterfall\'s upfront planning reduces requirement misalignment. Both affect quality in different ways.', level: 'explain', correct: false },
+      { text: 'Methodology affects quality through its testing and feedback mechanisms. Agile\'s sprints enable early defect detection, while Waterfall\'s late testing phase risks accumulating technical debt. The relationship between methodology and quality is therefore mediated by project type and team capability.', level: 'analyse', correct: false },
+      { text: 'Methodology significantly affects quality when team experience and project requirements are well-matched. Agile improves quality in dynamic environments through rapid feedback loops, but can reduce quality in safety-critical projects where full upfront specification is essential. The extent of impact depends on the fit between methodology and context, not methodology alone.', level: 'evaluate', correct: true },
+    ])
+  }
+];
+
+// Final quiz
+const finalQuizQs = [
+  {
+    q: 'Which ALARM level requires you to make a supported judgement with criteria?',
+    options: ['Identify','Describe','Explain','Evaluate'],
+    correct: 3
+  },
+  {
+    q: 'A question asks you to "outline the steps in an agile development process." What is the minimum ALARM level required?',
+    options: ['Identify','Describe','Analyse','Evaluate'],
+    correct: 1
+  },
+  {
+    q: 'The phrase "To what extent…" implies which ALARM level?',
+    options: ['Describe','Explain','Evaluate','Identify'],
+    correct: 2
+  },
+  {
+    q: 'In VSCC, the "V" stands for:',
+    options: ['Variable','Verb','Value','Version'],
+    correct: 1
+  },
+  {
+    q: 'A student writes only features without cause/effect for an "Explain" question. What mistake have they made?',
+    options: ['Too much detail','Responded at too low an ALARM level','Used the wrong subject','Identified wrong criteria'],
+    correct: 1
+  },
+  {
+    q: 'What does ALARM stand for?',
+    options: ['A Literacy And Response Method','A Learning And Responding Matrix','Analyse Link Apply Respond Make','Assess Learn Argue Respond Measure'],
+    correct: 1
+  },
+];
+
+// Colours per level id
+const levelColour = { identify:'var(--identify-c)', describe:'var(--describe-c)', explain:'var(--explain-c)', analyse:'var(--analyse-c)', evaluate:'var(--evaluate-c)', critically:'var(--critically-c)' };
+const levelLabel = { identify:'Identify', describe:'Describe', explain:'Explain', analyse:'Analyse', evaluate:'Evaluate', critically:'Critically' };
+
+// ─────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────
+function shuffleArr(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function toggleCheck(el) {
+  el.classList.toggle('done');
+  if (el.classList.contains('done')) el.querySelector('.check-box').textContent = '✓';
+  else el.querySelector('.check-box').textContent = '';
+}
+
+function toggleAccordion(id) {
+  const body = document.getElementById(id);
+  body.classList.toggle('open');
+}
+
+// ─────────────────────────────────────────────
+// TAB NAVIGATION
+// ─────────────────────────────────────────────
+const completedTabs = new Set([0]);
+function goTab(n) {
+  document.querySelectorAll('.tab-content').forEach((el, i) => el.classList.toggle('active', i === n));
+  document.querySelectorAll('.tab-btn').forEach((el, i) => el.classList.toggle('active', i === n));
+  completedTabs.add(n);
+  document.getElementById('progressBar').style.width = Math.round((completedTabs.size / 6) * 100) + '%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─────────────────────────────────────────────
+// TAB 0: BUILD ALARM MATRIX
+// ─────────────────────────────────────────────
+function buildAlarmMatrix() {
+  const container = document.getElementById('alarmMatrix');
+  container.innerHTML = alarmLevels.map(lv => `
+    <div class="alarm-level-card ${lv.cls}">
+      <div class="level-name" style="color:${lv.color}">${lv.name}</div>
+      <div class="level-what">${lv.what}</div>
+      <div style="font-family:'Syne',monospace;font-size:0.62rem;color:${lv.color};margin-bottom:0.4rem;">${lv.marks}</div>
+      <div class="level-verbs">
+        ${lv.verbs.map(v => `<span class="verb-chip" style="color:${lv.color};border-color:${lv.color}33;">${v}</span>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+// ─────────────────────────────────────────────
+// TAB 1: KEY WORDS LIST + VERB SORT
+// ─────────────────────────────────────────────
+function buildKeyWordsList() {
+  const container = document.getElementById('keyWordsList');
+  const grouped = {};
+  nesaKeyWords.forEach(kw => {
+    if (!grouped[kw.level]) grouped[kw.level] = [];
+    grouped[kw.level].push(kw);
+  });
+  container.innerHTML = alarmLevels.map(lv => {
+    const words = grouped[lv.id] || [];
+    if (!words.length) return '';
+    return `
+      <div class="accordion-item" style="border-color:${lv.color}33;">
+        <button class="accordion-header" onclick="toggleAccordion('kw_${lv.id}')">
+          <div class="accordion-header-left">
+            <div style="width:10px;height:10px;border-radius:50%;background:${lv.color};flex-shrink:0;"></div>
+            <div class="accordion-title" style="color:${lv.color};">${lv.name}</div>
+            <span style="font-family:'Syne',monospace;font-size:0.65rem;color:var(--muted);margin-left:0.25rem;">${words.length} verbs</span>
+          </div>
+          <span style="color:var(--muted);font-size:0.85rem;">▾</span>
+        </button>
+        <div class="accordion-body" id="kw_${lv.id}">
+          ${words.map(kw => `
+            <div style="padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.83rem;">
+              <span style="font-family:'Syne',sans-serif;font-weight:700;color:${lv.color};">${kw.verb}</span>
+              <span style="color:var(--muted);margin-left:0.5rem;">— ${kw.def}</span>
+            </div>`).join('')}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+let verbSortState = {};
+function buildVerbSortActivity() {
+  verbSortState = {};
+  const area = document.getElementById('verbSortArea');
+  const shuffled = shuffleArr(verbMatchData);
+  area.innerHTML = `
+    <div style="margin-bottom:0.75rem;">
+      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:0.6rem;" id="verbSortInstr">Click a verb, then click its ALARM level:</p>
+      <div class="verb-match-grid" id="vmVerbGrid">
+        ${shuffled.map((vd, i) => `<div class="vm-verb" id="vmV_${i}" onclick="selectVerbForSort(${i})" data-correct="${vd.correct}">${vd.verb}</div>`).join('')}
+      </div>
+    </div>
+    <div class="level-buttons" id="vmLevelBtns">
+      ${alarmLevels.map(lv => `<button class="level-btn-vm" style="color:${lv.color};border-color:${lv.color}33;background:${lv.color}11;" onclick="pickLevelForSort('${lv.id}')">${lv.id}</button>`).join('')}
+    </div>`;
+  document.getElementById('verbSortFeedback').textContent = '';
+}
+
+let selectedVerbIdx = null;
+function selectVerbForSort(i) {
+  document.querySelectorAll('.vm-verb').forEach(el => el.style.outline = 'none');
+  const el = document.getElementById(`vmV_${i}`);
+  if (el.classList.contains('correct') || el.classList.contains('wrong')) return;
+  selectedVerbIdx = i;
+  el.style.outline = `2px solid var(--accent3)`;
+  document.getElementById('verbSortFeedback').textContent = `Selected: "${verbMatchData[i]?.verb || ''}" — now pick its level below.`;
+}
+
+function pickLevelForSort(levelId) {
+  if (selectedVerbIdx === null) {
+    document.getElementById('verbSortFeedback').textContent = '← First click a verb above.';
+    return;
+  }
+  const el = document.getElementById(`vmV_${selectedVerbIdx}`);
+  const correct = el.dataset.correct;
+  el.style.outline = 'none';
+  if (levelId === correct) {
+    el.classList.add('correct');
+    el.textContent += ' ✓';
+    document.getElementById('verbSortFeedback').style.color = 'var(--accent)';
+    document.getElementById('verbSortFeedback').textContent = `✓ Correct! "${el.textContent.replace(' ✓','')}" is at the ${levelLabel[levelId]} level.`;
+  } else {
+    el.classList.add('wrong');
+    document.getElementById('verbSortFeedback').style.color = 'var(--accent2)';
+    document.getElementById('verbSortFeedback').textContent = `✗ Not quite — "${el.textContent}" belongs at the ${levelLabel[correct]} level, not ${levelLabel[levelId]}.`;
+  }
+  selectedVerbIdx = null;
+}
+
+function resetVerbSort() { buildVerbSortActivity(); selectedVerbIdx = null; }
+
+// ─────────────────────────────────────────────
+// TAB 2: VSCC PRACTICE
+// ─────────────────────────────────────────────
+function buildVSCCPractice() {
+  const container = document.getElementById('vsccPractice');
+  container.innerHTML = vsccQs.map((q, i) => `
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAccordion('vscc_${i}')">
+        <div class="accordion-header-left">
+          <div class="accordion-title">Q${i+1}: "${q.q.substring(0,60)}…"</div>
+        </div>
+        <span style="color:var(--muted);font-size:0.85rem;">▾</span>
+      </button>
+      <div class="accordion-body" id="vscc_${i}">
+        <p style="font-size:0.83rem;color:var(--muted);margin-bottom:0.85rem;line-height:1.6;"><strong style="color:var(--text);">Question:</strong> ${q.q}</p>
+        <div class="vscc-row">
+          <div>
+            <label class="field-label">Verb (directive word)</label>
+            <input type="text" id="vsccV_${i}" class="field-input" placeholder="e.g. Explain">
+          </div>
+          <div>
+            <label class="field-label">ALARM Level</label>
+            <select id="vsccL_${i}" class="field-select">
+              <option value="">— Select —</option>
+              <option>Identify</option><option>Describe</option><option>Explain</option>
+              <option>Analyse</option><option>Evaluate</option><option>Critically Analyse</option><option>Critically Evaluate</option>
+            </select>
+          </div>
+        </div>
+        <div class="vscc-row">
+          <div>
+            <label class="field-label">Subject</label>
+            <input type="text" id="vsccS_${i}" class="field-input" placeholder="What is the question about?">
+          </div>
+          <div>
+            <label class="field-label">Criteria / Conditions</label>
+            <input type="text" id="vsccC_${i}" class="field-input" placeholder="Any specific focus or scope">
+          </div>
+        </div>
+        <div class="flex-row" style="margin-top:0.6rem;">
+          <button class="btn btn-primary" onclick="checkVSCC(${i})">Check</button>
+          <button class="btn btn-secondary" onclick="clearVSCC(${i})">Clear</button>
+        </div>
+        <div id="vsccFb_${i}" style="display:none;margin-top:0.75rem;" class="info-box"></div>
+      </div>
+    </div>`).join('');
+}
+
+function checkVSCC(i) {
+  const q = vsccQs[i];
+  const verb = document.getElementById(`vsccV_${i}`).value.trim().toLowerCase();
+  const level = document.getElementById(`vsccL_${i}`).value;
+  const fb = document.getElementById(`vsccFb_${i}`);
+  const verbOk = verb === q.verb.toLowerCase();
+  const levelOk = level.toLowerCase().startsWith(q.level.toLowerCase());
+  fb.style.display = 'block';
+  if (verbOk && levelOk) {
+    fb.className = 'info-box info-box-green';
+    fb.innerHTML = `✓ <strong>Verb correct!</strong> "${q.verb}" at ${q.level} level.<br><strong>Tip:</strong> ${q.hint}`;
+  } else {
+    fb.className = 'info-box info-box-amber';
+    let msg = '';
+    if (!verbOk) msg += `✗ Verb: The directive verb is "<strong>${q.verb}</strong>". `;
+    if (!levelOk) msg += `✗ Level: This is a <strong>${q.level}</strong> question. `;
+    msg += `<br><strong>Tip:</strong> ${q.hint}`;
+    fb.innerHTML = msg;
+  }
+}
+function clearVSCC(i) {
+  ['vsccV_','vsccS_','vsccC_'].forEach(p => document.getElementById(p+i).value = '');
+  document.getElementById('vsccL_'+i).value = '';
+  const fb = document.getElementById('vsccFb_'+i);
+  fb.style.display = 'none';
+}
+
+function buildVSCCHidden() {
+  const container = document.getElementById('vsccHidden');
+  container.innerHTML = vsccHiddenQs.map((q, i) => `
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAccordion('vscc_h_${i}')">
+        <div class="accordion-header-left">
+          <div class="accordion-title">Q${i+1}: "${q.q.substring(0,60)}…"</div>
+          <span class="hidden-verb-badge">HIDDEN VERB</span>
+        </div>
+        <span style="color:var(--muted);font-size:0.85rem;">▾</span>
+      </button>
+      <div class="accordion-body" id="vscc_h_${i}">
+        <p style="font-size:0.83rem;font-weight:600;margin-bottom:0.35rem;">${q.q}</p>
+        <div class="info-box info-box-amber" style="margin-bottom:0.85rem;font-size:0.78rem;">🔍 Clue: ${q.clue}</div>
+        <p style="font-size:0.82rem;color:var(--muted);margin-bottom:0.6rem;"><strong style="color:var(--text);">Step 1:</strong> What is the implied directive verb?</p>
+        <div style="display:flex;flex-wrap:wrap;gap:0.45rem;margin-bottom:0.85rem;" id="hvVerbs_${i}">
+          ${shuffleArr([q.impliedVerb, ...q.wrongVerbs]).map(v =>
+            `<button class="vm-verb" id="hvBtn_${i}_${v}" onclick="selectHVVerb(${i},'${v}')">${v}</button>`
+          ).join('')}
+        </div>
+        <div id="hvStep2_${i}" style="display:none;">
+          <p style="font-size:0.82rem;color:var(--muted);margin-bottom:0.6rem;"><strong style="color:var(--text);">Step 2:</strong> Now complete the VSCC breakdown:</p>
+          <div class="vscc-row">
+            <div>
+              <label class="field-label">Subject</label>
+              <input type="text" id="hvS_${i}" class="field-input" placeholder="What is the question about?">
+            </div>
+            <div>
+              <label class="field-label">ALARM Level</label>
+              <select id="hvL_${i}" class="field-select">
+                <option value="">— Select —</option>
+                <option>Identify</option><option>Describe</option><option>Explain</option>
+                <option>Analyse</option><option>Evaluate</option><option>Critically Analyse</option><option>Critically Evaluate</option>
+              </select>
+            </div>
+          </div>
+          <div class="flex-row" style="margin-top:0.6rem;">
+            <button class="btn btn-primary" onclick="checkVSCCHidden(${i})">Check</button>
+            <button class="btn btn-secondary" onclick="clearVSCCHidden(${i})">Clear</button>
+          </div>
+          <div id="hvFb_${i}" style="display:none;margin-top:0.75rem;" class="info-box"></div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function selectHVVerb(i, chosen) {
+  const q = vsccHiddenQs[i];
+  document.querySelectorAll(`#hvVerbs_${i} .vm-verb`).forEach(b => {
+    b.classList.remove('correct','wrong');
+    b.onclick = null;
+  });
+  if (chosen === q.impliedVerb) {
+    document.getElementById(`hvBtn_${i}_${chosen}`).classList.add('correct');
+    document.getElementById(`hvStep2_${i}`).style.display = 'block';
+  } else {
+    document.getElementById(`hvBtn_${i}_${chosen}`).classList.add('wrong');
+    document.getElementById(`hvBtn_${i}_${q.impliedVerb}`).classList.add('correct');
+  }
+}
+
+function checkVSCCHidden(i) {
+  const q = vsccHiddenQs[i];
+  const level = document.getElementById(`hvL_${i}`).value;
+  const fb = document.getElementById(`hvFb_${i}`);
+  const levelOk = level.toLowerCase().startsWith(q.level.toLowerCase());
+  fb.style.display = 'block';
+  if (levelOk) {
+    fb.className = 'info-box info-box-green';
+    fb.innerHTML = `✓ Correct ALARM level: <strong>${q.level}</strong>.<br><strong>Tip:</strong> ${q.hint}`;
+  } else {
+    fb.className = 'info-box info-box-amber';
+    fb.innerHTML = `✗ The correct ALARM level is <strong>${q.level}</strong>.<br><strong>Tip:</strong> ${q.hint}`;
+  }
+}
+function clearVSCCHidden(i) {
+  document.getElementById(`hvS_${i}`).value = '';
+  document.getElementById(`hvL_${i}`).value = '';
+  const fb = document.getElementById(`hvFb_${i}`);
+  fb.style.display = 'none';
+}
+
+// ─────────────────────────────────────────────
+// TAB 3: BUILDER
+// ─────────────────────────────────────────────
+function rebuildQSelector() {
+  const sel = document.getElementById('qSelector');
+  const teacherQs = getTeacherQuestions();
+  const settings = getDisplaySettings();
+  const levelColours = { Identify:'var(--identify-c)', Describe:'var(--describe-c)', Explain:'var(--explain-c)', Analyse:'var(--analyse-c)', Evaluate:'var(--evaluate-c)', 'Critically Analyse':'var(--critically-c)', 'Critically Evaluate':'var(--critically-c)' };
+
+  let allQs = [];
+  const tqFormatted = teacherQs.map((q, i) => ({ q:q.q, verb:q.verb, level:q.level, marks:q.marks, steps:q.steps, teacherQ:true, tIdx:i }));
+  if (settings.teacherFirst) {
+    allQs = settings.hideBuiltIn ? tqFormatted : [...tqFormatted, ...builderQs];
+  } else {
+    allQs = settings.hideBuiltIn ? tqFormatted : [...builderQs, ...tqFormatted];
+  }
+
+  sel.innerHTML = allQs.map((q, i) => {
+    const c = levelColours[q.level] || 'var(--muted)';
+    return `<button class="q-btn" onclick="loadBuilderQ(${i}, window._allQs)" id="qBtn_${i}">
+      <span style="font-family:'Syne',monospace;font-size:0.62rem;color:${c};border:1px solid ${c}33;padding:1px 5px;border-radius:2px;margin-right:0.4rem;">${q.level}</span>
+      ${q.q.substring(0,55)}${q.q.length>55?'…':''}
+      ${q.teacherQ ? '<span class="q-teacher-badge">Teacher Q</span>' : ''}
+      ${q.marks ? `<span style="font-family:'Syne',monospace;font-size:0.6rem;color:var(--muted);margin-left:0.3rem;">${q.marks}m</span>` : ''}
+    </button>`;
+  }).join('');
+
+  window._allQs = allQs;
+  document.getElementById('builderArea').style.display = allQs.length ? 'block' : 'none';
+  if (allQs.length) loadBuilderQ(0, allQs);
+}
+
+function loadBuilderQ(i, allQs) {
+  window._currentBuilderQ = allQs[i];
+  document.querySelectorAll('.q-btn').forEach((b, j) => b.classList.toggle('active', j === i));
+  const q = allQs[i];
+  document.getElementById('builderArea').style.display = 'block';
+  const levelColours = { Identify:'var(--identify-c)', Describe:'var(--describe-c)', Explain:'var(--explain-c)', Analyse:'var(--analyse-c)', Evaluate:'var(--evaluate-c)', 'Critically Analyse':'var(--critically-c)', 'Critically Evaluate':'var(--critically-c)' };
+  const c = levelColours[q.level] || 'var(--muted)';
+
+  // Highlight verb in question
+  const highlighted = q.q.replace(new RegExp(`\\b(${q.verb})\\b`, 'i'), `<span style="color:${c};font-weight:700;background:${c}15;padding:0 3px;border-radius:3px;">$1</span>`);
+  document.getElementById('builderQText').innerHTML = highlighted;
+  document.getElementById('builderQMeta').innerHTML = `
+    <span style="color:${c};">ALARM: ${q.level}</span>
+    <span>Verb: <strong>${q.verb}</strong></span>
+    ${q.marks ? `<span>${q.marks} marks</span>` : ''}`;
+
+  const stepsEl = document.getElementById('builderSteps');
+  stepsEl.innerHTML = q.steps.map((s, si) => `
+    <div class="builder-step">
+      <div class="builder-step-header">
+        <div class="step-num-circle">${si+1}</div>
+        <div class="step-label">${s.label}</div>
+      </div>
+      <div class="step-hint">${s.hint}</div>
+      <textarea id="builderStep_${si}" class="field-textarea" rows="2" placeholder="${s.starter}"></textarea>
+    </div>`).join('');
+
+  document.getElementById('assembledResponse').style.display = 'none';
+}
+
+function assembleResponse() {
+  const q = window._currentBuilderQ;
+  if (!q) return;
+  const parts = q.steps.map((s, i) => ({
+    label: s.label,
+    text: document.getElementById(`builderStep_${i}`)?.value.trim() || ''
+  })).filter(p => p.text);
+  if (!parts.length) return;
+
+  const colors = ['rgba(79,255,176,0.08)','rgba(124,111,255,0.08)','rgba(255,183,77,0.08)','rgba(255,95,126,0.08)','rgba(206,147,216,0.08)','rgba(79,195,247,0.08)'];
+  document.getElementById('assembledContent').innerHTML = parts.map((p, i) => `
+    <div class="para-piece" style="background:${colors[i%colors.length]};border-left:3px solid ${['var(--accent)','var(--accent4)','var(--explain-c)','var(--accent2)','var(--evaluate-c)','var(--identify-c)'][i%6]};">
+      <div style="font-family:'Syne',monospace;font-size:0.62rem;color:var(--muted);margin-bottom:0.3rem;">${p.label.toUpperCase()}</div>
+      ${p.text}
+    </div>`).join('');
+  document.getElementById('assembledResponse').style.display = 'block';
+}
+
+function clearBuilder() {
+  const q = window._currentBuilderQ;
+  if (!q) return;
+  q.steps.forEach((_, i) => { const el = document.getElementById(`builderStep_${i}`); if (el) el.value = ''; });
+  document.getElementById('assembledResponse').style.display = 'none';
+}
+
+function buildStructureTemplates() {
+  const container = document.getElementById('structureTemplates');
+  container.innerHTML = alarmLevels.map(lv => `
+    <div class="accordion-item" style="border-color:${lv.color}33;">
+      <button class="accordion-header" onclick="toggleAccordion('struct_${lv.id}')">
+        <div class="accordion-header-left">
+          <div style="width:10px;height:10px;border-radius:50%;background:${lv.color};flex-shrink:0;"></div>
+          <div class="accordion-title" style="color:${lv.color};">${lv.name}</div>
+          <span style="font-family:'Syne',monospace;font-size:0.62rem;color:var(--muted);margin-left:0.25rem;">${lv.marks}</span>
+        </div>
+        <span style="color:var(--muted);font-size:0.85rem;">▾</span>
+      </button>
+      <div class="accordion-body" id="struct_${lv.id}">
+        ${lv.structure.map(s => `
+          <div class="struct-step">
+            <div class="struct-step-label">${s.label}</div>
+            <div style="font-size:0.78rem;color:var(--muted);">${s.hint}</div>
+            <div style="font-size:0.8rem;color:var(--accent4);margin-top:0.2rem;font-style:italic;">"${s.starter}"</div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+// ─────────────────────────────────────────────
+// TAB 4: LEVEL GRADER
+// ─────────────────────────────────────────────
+function buildGrader() {
+  const container = document.getElementById('graderQuestions');
+  container.innerHTML = graderQs.map((gq, qi) => `
+    <div class="grader-card">
+      <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem;">
+        <div style="font-family:'Syne',monospace;font-size:0.65rem;color:var(--muted);">Q${qi+1}</div>
+        ${gq.impliedVerb ? `<span class="hidden-verb-badge">HIDDEN VERB</span>` : ''}
+      </div>
+      ${gq.impliedVerb ? `<div class="info-box info-box-amber" style="font-size:0.78rem;margin-bottom:0.6rem;">Implied verb: <strong>${gq.impliedVerb}</strong></div>` : ''}
+      <div class="grader-question">${gq.question}</div>
+      <div class="grader-options">
+        ${gq.items.map((item, si) => `
+          <div class="grader-option" id="gopt_${qi}_${si}"
+            data-qi="${qi}" data-si="${si}"
+            data-correct="${item.correct}" data-level="${item.level}"
+            onclick="selectGrader(this)">
+            ${item.text}
+          </div>`).join('')}
+      </div>
+      <div class="grader-feedback" id="gfb_${qi}"></div>
+    </div>`).join('');
+}
+
+function selectGrader(el) {
+  const qi = parseInt(el.dataset.qi);
+  const isCorrect = el.dataset.correct === 'true';
+  const allOpts = document.querySelectorAll(`[data-qi="${qi}"]`);
+  allOpts.forEach(o => o.classList.add('grader-locked'));
+  allOpts.forEach(o => { o.onclick = null; });
+  if (isCorrect) {
+    el.classList.add('correct-answer');
+  } else {
+    el.classList.add('wrong-answer');
+    allOpts.forEach(o => { if (o.dataset.correct === 'true') o.classList.add('correct-answer'); });
+  }
+  const fb = document.getElementById(`gfb_${qi}`);
+  const colour = levelColour[graderQs[qi].correctLevel] || 'var(--text)';
+  fb.innerHTML = `<strong style="color:${colour};">Correct level: ${levelLabel[graderQs[qi].correctLevel]}</strong> — ${graderQs[qi].correctReason}`;
+  fb.classList.add('show');
+}
+
+// ─────────────────────────────────────────────
+// TAB 5: FINAL QUIZ
+// ─────────────────────────────────────────────
+function buildFinalQuiz() {
+  const container = document.getElementById('finalQuizContent');
+  container.innerHTML = finalQuizQs.map((q, i) => `
+    <div class="quiz-q">
+      <div class="quiz-q-text">${i+1}. ${q.q}</div>
+      <div class="quiz-options">
+        ${q.options.map((opt, oi) => `
+          <label>
+            <input type="radio" name="fq_${i}" value="${oi}">
+            ${opt}
+          </label>`).join('')}
+      </div>
+      <div class="quiz-result" id="fqr_${i}"></div>
+    </div>`).join('');
+}
+
+function scoreFinalQuiz() {
+  let score = 0;
+  finalQuizQs.forEach((q, i) => {
+    const selected = document.querySelector(`input[name="fq_${i}"]:checked`);
+    const res = document.getElementById(`fqr_${i}`);
+    if (!selected) { res.style.display = 'block'; res.className = 'quiz-result wrong'; res.textContent = '— Not answered'; return; }
+    if (parseInt(selected.value) === q.correct) {
+      score++;
+      res.className = 'quiz-result correct'; res.textContent = '✓ Correct!';
+    } else {
+      res.className = 'quiz-result wrong'; res.textContent = `✗ Correct answer: "${q.options[q.correct]}"`;
+    }
+    res.style.display = 'block';
+  });
+  document.getElementById('finalScoreNum').textContent = `${score}/${finalQuizQs.length}`;
+  const circle = document.getElementById('scoreCircle');
+  circle.style.display = 'flex';
+  circle.style.borderColor = score >= 5 ? 'var(--accent)' : score >= 3 ? 'var(--explain-c)' : 'var(--accent2)';
+  document.getElementById('finalScoreNum').style.color = score >= 5 ? 'var(--accent)' : score >= 3 ? 'var(--explain-c)' : 'var(--accent2)';
+}
+
+function resetFinalQuiz() {
+  document.querySelectorAll('input[type=radio]').forEach(el => el.checked = false);
+  finalQuizQs.forEach((_, i) => { const r = document.getElementById(`fqr_${i}`); r.style.display = 'none'; r.textContent = ''; });
+  document.getElementById('scoreCircle').style.display = 'none';
+}
+
+// ─────────────────────────────────────────────
+// TEACHER PANEL
+// ─────────────────────────────────────────────
+const TP_PW_KEY   = 'alarm_teacher_pw';
+const TP_QS_KEY   = 'alarm_teacher_questions';
+const TP_DISP_KEY = 'alarm_teacher_display';
+const TP_GH_KEY   = 'alarm_gh_config';
+const DEFAULT_PW  = 'teacher2025';
+let tpStepCount = 0, tpEditIndex = null;
+
+function getTeacherPassword() { return localStorage.getItem(TP_PW_KEY) || DEFAULT_PW; }
+function getTeacherQuestions() { try { return JSON.parse(localStorage.getItem(TP_QS_KEY)) || []; } catch { return []; } }
+function saveTeacherQuestionsToStorage(qs) { localStorage.setItem(TP_QS_KEY, JSON.stringify(qs)); }
+function getDisplaySettings() { try { return JSON.parse(localStorage.getItem(TP_DISP_KEY)) || { teacherFirst: true, hideBuiltIn: false }; } catch { return { teacherFirst: true, hideBuiltIn: false }; } }
+function getGhConfig() { try { return JSON.parse(localStorage.getItem(TP_GH_KEY)) || {}; } catch { return {}; } }
+
+// STUDENT: fetch questions.json from GitHub on page load
+async function fetchQuestionsFromGitHub() {
+  let owner = '', repo = '', branch = 'main', path = 'questions.json';
+  const cfg = getGhConfig();
+  if (cfg.owner) owner = cfg.owner;
+  if (cfg.repo) repo = cfg.repo;
+  if (cfg.branch) branch = cfg.branch;
+  if (cfg.path) path = cfg.path;
+  if (!owner || !repo) {
+    const hostname = location.hostname;
+    const parts = hostname.split('.');
+    if (parts.length >= 3 && parts[1] === 'github' && parts[2] === 'io') {
+      owner = parts[0];
+      const pp = location.pathname.split('/').filter(Boolean);
+      if (pp.length > 0) repo = pp[0];
+    }
+  }
+  if (!owner || !repo) return;
+  try {
+    const res = await fetch(`https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}?_=${Date.now()}`);
+    if (!res.ok) return;
+    const qs = await res.json();
+    if (Array.isArray(qs) && qs.length > 0) {
+      localStorage.setItem(TP_QS_KEY, JSON.stringify(qs));
+      rebuildQSelector();
+      const el = document.getElementById('ghLoadIndicator');
+      if (el) { el.textContent = `✓ ${qs.length} teacher question${qs.length!==1?'s':''} loaded`; el.style.display = 'inline'; }
+    }
+  } catch(e) {}
+}
+
+function openTeacherPanel() {
+  document.getElementById('teacherOverlay').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+  document.getElementById('tpLogin').style.display = 'block';
+  document.getElementById('tpMain').style.display = 'none';
+  document.getElementById('tpPasswordInput').value = '';
+  document.getElementById('tpLoginError').textContent = '';
+}
+function closeTeacherPanel() {
+  document.getElementById('teacherOverlay').style.display = 'none';
+  document.body.style.overflow = '';
+  rebuildQSelector();
+}
+document.getElementById('teacherOverlay').addEventListener('click', function(e) { if (e.target === this) closeTeacherPanel(); });
+
+function checkTeacherPassword() {
+  const input = document.getElementById('tpPasswordInput').value;
+  if (input === getTeacherPassword()) {
+    document.getElementById('tpLogin').style.display = 'none';
+    document.getElementById('tpMain').style.display = 'block';
+    loadDisplaySettings(); loadGhConfig(); renderQuestionList(); initScaffoldSteps();
+    tpEditIndex = null;
+    document.getElementById('tpSaveSuccess').style.display = 'none';
+    updateGhStatusBanner();
+  } else {
+    document.getElementById('tpLoginError').textContent = '✗ Incorrect password. Try again.';
+    document.getElementById('tpPasswordInput').value = '';
+  }
+}
+
+function switchTpTab(n) {
+  [0,1,2,3].forEach(i => {
+    document.getElementById(`tpSection${i}`).style.display = i===n ? 'block' : 'none';
+    const b = document.getElementById(`tpTab${i}`);
+    b.classList.toggle('active', i===n);
+  });
+  if (n === 1) renderQuestionList();
+  if (n === 3) loadGhConfig();
+}
+
+function initScaffoldSteps() { tpStepCount = 0; document.getElementById('tpStepsContainer').innerHTML = ''; addScaffoldStep(); }
+function addScaffoldStep() {
+  tpStepCount++;
+  const n = tpStepCount;
+  const div = document.createElement('div');
+  div.className = 'tp-scaffold-step'; div.id = `tpStep_${n}`;
+  div.innerHTML = `
+    <div class="tp-step-header">
+      <div class="tp-step-num">${n}</div>
+      <div style="font-size:0.83rem;font-weight:600;">Step ${n}</div>
+      <button class="tp-step-remove" onclick="removeScaffoldStep(${n})">✕</button>
+    </div>
+    <div class="tp-field-row" style="margin-bottom:0.5rem;">
+      <div><label class="field-label">Step Label</label><input type="text" class="field-input" id="tpStepLabel_${n}" placeholder="e.g. Topic Sentence"></div>
+      <div><label class="field-label">Hint</label><input type="text" class="field-input" id="tpStepHint_${n}" placeholder="e.g. State your argument clearly."></div>
+    </div>
+    <div><label class="field-label">Sentence Starter</label><input type="text" class="field-input" id="tpStepStarter_${n}" placeholder="e.g. Cybersecurity is important because..."></div>`;
+  document.getElementById('tpStepsContainer').appendChild(div);
+}
+function removeScaffoldStep(n) { const el = document.getElementById(`tpStep_${n}`); if (el) el.remove(); }
+function collectSteps() {
+  const steps = [];
+  document.querySelectorAll('.tp-scaffold-step').forEach(div => {
+    const n = div.id.replace('tpStep_','');
+    steps.push({ label: document.getElementById(`tpStepLabel_${n}`)?.value.trim() || `Step ${n}`, hint: document.getElementById(`tpStepHint_${n}`)?.value.trim() || '', starter: document.getElementById(`tpStepStarter_${n}`)?.value.trim() || '' });
+  });
+  return steps;
+}
+
+function saveTeacherQuestion() {
+  const qText = document.getElementById('tpQText').value.trim();
+  const verb  = document.getElementById('tpQVerb').value.trim();
+  const level = document.getElementById('tpQLevel').value;
+  const marks = parseInt(document.getElementById('tpQMarks').value) || null;
+  const errEl = document.getElementById('tpAddError');
+  if (!qText) { errEl.textContent = '✗ Question text required.'; return; }
+  if (!verb)  { errEl.textContent = '✗ Please enter the key verb.'; return; }
+  if (!level) { errEl.textContent = '✗ Please select the ALARM level.'; return; }
+  errEl.textContent = '';
+  const steps = collectSteps();
+  if (!steps.length) { errEl.textContent = '✗ Add at least one scaffolding step.'; return; }
+  const newQ = { id: Date.now(), q: qText, verb, level, marks, steps, teacherQ: true, createdAt: new Date().toLocaleDateString('en-AU') };
+  const qs = getTeacherQuestions();
+  if (tpEditIndex !== null) { qs[tpEditIndex] = { ...newQ, id: qs[tpEditIndex].id }; tpEditIndex = null; }
+  else qs.push(newQ);
+  saveTeacherQuestionsToStorage(qs);
+  const succ = document.getElementById('tpSaveSuccess');
+  succ.className = 'info-box info-box-green';
+  succ.textContent = `✓ Saved locally. Go to 🐙 GitHub Sync and Publish to push it to students.`;
+  succ.style.display = 'block';
+  clearTeacherForm();
+  setTimeout(() => succ.style.display = 'none', 7000);
+}
+
+function clearTeacherForm() {
+  ['tpQText','tpQVerb','tpQMarks'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('tpQLevel').value = '';
+  document.getElementById('tpAddError').textContent = '';
+  tpEditIndex = null; initScaffoldSteps();
+}
+
+function renderQuestionList() {
+  const qs = getTeacherQuestions();
+  const list = document.getElementById('tpQuestionList');
+  const empty = document.getElementById('tpEmptyState');
+  if (!qs.length) { list.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  const lc = { Identify:'var(--identify-c)', Describe:'var(--describe-c)', Explain:'var(--explain-c)', Analyse:'var(--analyse-c)', Evaluate:'var(--evaluate-c)' };
+  list.innerHTML = qs.map((q, i) => `
+    <div class="tp-q-card">
+      <div class="tp-q-card-header">
+        <div style="flex:1;">
+          <div class="tp-q-text">${q.q}</div>
+          <div class="tp-q-meta">
+            <span style="font-family:'Syne',monospace;font-size:0.65rem;color:${lc[q.level]||'var(--muted)'};border:1px solid ${lc[q.level]||'var(--muted)'}33;padding:1px 5px;border-radius:3px;">${q.level}</span>
+            <span>Verb: ${q.verb}</span>
+            ${q.marks ? `<span>${q.marks} marks</span>` : ''}
+            <span style="color:var(--muted);">${q.createdAt||''}</span>
+          </div>
+          <div style="font-size:0.73rem;color:var(--muted);margin-top:0.25rem;">${q.steps.length} step${q.steps.length!==1?'s':''}: ${q.steps.map(s=>s.label).join(' → ')}</div>
+        </div>
+        <div class="tp-q-actions">
+          <button class="tp-icon-btn" onclick="editTeacherQuestion(${i})">✏️</button>
+          <button class="tp-icon-btn del" onclick="deleteTeacherQuestion(${i})">🗑</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function deleteTeacherQuestion(i) {
+  if (!confirm('Delete this question? Remember to Publish to GitHub to remove it for students.')) return;
+  const qs = getTeacherQuestions(); qs.splice(i, 1); saveTeacherQuestionsToStorage(qs); renderQuestionList();
+}
+
+function editTeacherQuestion(i) {
+  const q = getTeacherQuestions()[i]; tpEditIndex = i; switchTpTab(0);
+  document.getElementById('tpQText').value = q.q; document.getElementById('tpQVerb').value = q.verb;
+  document.getElementById('tpQLevel').value = q.level; document.getElementById('tpQMarks').value = q.marks || '';
+  tpStepCount = 0; document.getElementById('tpStepsContainer').innerHTML = '';
+  q.steps.forEach(s => { addScaffoldStep(); const n=tpStepCount; document.getElementById(`tpStepLabel_${n}`).value=s.label; document.getElementById(`tpStepHint_${n}`).value=s.hint; document.getElementById(`tpStepStarter_${n}`).value=s.starter; });
+  const succ = document.getElementById('tpSaveSuccess'); succ.style.display='block'; succ.className='info-box info-box-purple'; succ.textContent='📝 Editing — click Save Question to update, then Publish.';
+}
+
+function exportQuestions() {
+  const qs = getTeacherQuestions();
+  const blob = new Blob([JSON.stringify(qs, null, 2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'questions.json'; a.click();
+}
+
+function loadDisplaySettings() {
+  const s = getDisplaySettings();
+  document.getElementById('tpShowTeacherQFirst').checked = s.teacherFirst;
+  document.getElementById('tpHideBuiltIn').checked = s.hideBuiltIn;
+}
+function saveDisplaySettings() {
+  localStorage.setItem(TP_DISP_KEY, JSON.stringify({ teacherFirst: document.getElementById('tpShowTeacherQFirst').checked, hideBuiltIn: document.getElementById('tpHideBuiltIn').checked }));
+  document.getElementById('tpSettingsMsg').textContent = '✓ Saved.';
+  setTimeout(() => document.getElementById('tpSettingsMsg').textContent = '', 2500);
+}
+function clearAllTeacherQuestions() {
+  if (!confirm('Delete ALL custom questions? Publish to GitHub after to remove for students.')) return;
+  localStorage.removeItem(TP_QS_KEY); renderQuestionList();
+}
+function changePassword() {
+  const np=document.getElementById('tpNewPw').value, cp=document.getElementById('tpConfirmPw').value, msg=document.getElementById('tpPwMsg');
+  if (!np) { msg.style.color='var(--accent2)'; msg.textContent='✗ Enter a new password.'; return; }
+  if (np!==cp) { msg.style.color='var(--accent2)'; msg.textContent='✗ Passwords do not match.'; return; }
+  if (np.length<6) { msg.style.color='var(--accent2)'; msg.textContent='✗ Minimum 6 characters.'; return; }
+  localStorage.setItem(TP_PW_KEY, np);
+  msg.style.color='var(--accent)'; msg.textContent='✓ Password updated.';
+  document.getElementById('tpNewPw').value=''; document.getElementById('tpConfirmPw').value='';
+  setTimeout(() => msg.textContent='', 3000);
+}
+
+// GITHUB SYNC
+function loadGhConfig() {
+  const cfg = getGhConfig();
+  if (cfg.owner) document.getElementById('ghOwner').value = cfg.owner;
+  if (cfg.repo)  document.getElementById('ghRepo').value  = cfg.repo;
+  if (cfg.branch) document.getElementById('ghBranch').value = cfg.branch;
+  if (cfg.path)  document.getElementById('ghPath').value  = cfg.path;
+  if (cfg.token) document.getElementById('ghToken').value = cfg.token;
+  updateGhStatusBanner();
+}
+function saveGhConfig() {
+  const cfg = { owner:document.getElementById('ghOwner').value.trim(), repo:document.getElementById('ghRepo').value.trim(), branch:document.getElementById('ghBranch').value.trim()||'main', path:document.getElementById('ghPath').value.trim()||'questions.json', token:document.getElementById('ghToken').value.trim() };
+  localStorage.setItem(TP_GH_KEY, JSON.stringify(cfg));
+  setGhMsg('✓ Config saved.', 'var(--accent)'); updateGhStatusBanner();
+}
+function toggleTokenVisibility() { const el=document.getElementById('ghToken'); el.type=el.type==='password'?'text':'password'; }
+function updateGhStatusBanner() {
+  const cfg=getGhConfig(), banner=document.getElementById('ghStatusBanner');
+  if (!banner) return;
+  if (cfg.owner && cfg.repo && cfg.token) {
+    banner.className='info-box info-box-green'; banner.style.display='block';
+    banner.innerHTML=`✓ Connected to <strong>${cfg.owner}/${cfg.repo}</strong> — branch: ${cfg.branch||'main'}, file: ${cfg.path||'questions.json'}`;
+  } else {
+    banner.className='info-box info-box-amber'; banner.style.display='block';
+    banner.innerHTML='⚠ GitHub not configured yet. Fill in the fields below and click Save Config.';
+  }
+}
+async function testGhConnection() {
+  const cfg=getGhConfig();
+  if (!cfg.owner||!cfg.repo||!cfg.token) { setGhMsg('✗ Save config first.','var(--accent2)'); return; }
+  setGhMsg('Testing…','var(--muted)');
+  try {
+    const res=await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}`, { headers:{ Authorization:`token ${cfg.token}`, Accept:'application/vnd.github+json' } });
+    if (res.ok) { const d=await res.json(); setGhMsg(`✓ Connected: ${d.full_name} (${d.private?'private':'public'})`, 'var(--accent)'); }
+    else { const e=await res.json(); setGhMsg(`✗ ${res.status}: ${e.message}. Check token has Contents: Read & Write.`, 'var(--accent2)'); }
+  } catch(e) { setGhMsg(`✗ Network error: ${e.message}`, 'var(--accent2)'); }
+}
+async function publishToGitHub() {
+  const cfg=getGhConfig();
+  if (!cfg.owner||!cfg.repo||!cfg.token) { setGhMsg('✗ Configure GitHub settings first.','var(--accent2)'); return; }
+  const qs=getTeacherQuestions();
+  if (!qs.length) { setGhMsg('✗ No questions to publish. Add some first.','var(--accent2)'); return; }
+  const btn=document.getElementById('ghPublishBtn'); btn.disabled=true; btn.textContent='⏳ Publishing…';
+  setGhMsg('Contacting GitHub API…','var(--muted)');
+  const branch=cfg.branch||'main', filePath=cfg.path||'questions.json';
+  const apiUrl=`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${filePath}`;
+  const headers={ Authorization:`token ${cfg.token}`, Accept:'application/vnd.github+json', 'Content-Type':'application/json' };
+  try {
+    let sha=null;
+    const getRes=await fetch(`${apiUrl}?ref=${branch}`, {headers});
+    if (getRes.ok) { sha=(await getRes.json()).sha; }
+    else if (getRes.status!==404) { const e=await getRes.json(); throw new Error(`${getRes.status}: ${e.message}`); }
+    const content=btoa(unescape(encodeURIComponent(JSON.stringify(qs, null, 2))));
+    const putRes=await fetch(apiUrl, { method:'PUT', headers, body:JSON.stringify({ message:`Update teacher questions — ${new Date().toLocaleString('en-AU')}`, content, branch, ...(sha?{sha}:{}) }) });
+    if (putRes.ok) {
+      setGhMsg(`🚀 <strong>Published!</strong> ${qs.length} question${qs.length!==1?'s':''} written to <code style="font-family:'Syne',monospace;">${filePath}</code> on <code style="font-family:'Syne',monospace;">${branch}</code>. Students will see them within ~30 seconds.`, 'var(--accent)');
+    } else { const e=await putRes.json(); throw new Error(`${putRes.status}: ${e.message}`); }
+  } catch(e) { setGhMsg(`✗ Publish failed: ${e.message}`, 'var(--accent2)'); }
+  finally { btn.disabled=false; btn.textContent='🚀 Publish to GitHub'; }
+}
+function setGhMsg(html, color) { const el=document.getElementById('ghActionMsg'); if (!el) return; el.style.color=color||'var(--text)'; el.innerHTML=html; }
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+buildAlarmMatrix();
+buildKeyWordsList();
+buildVerbSortActivity();
+buildVSCCPractice();
+buildVSCCHidden();
+buildStructureTemplates();
+buildGrader();
+buildFinalQuiz();
+rebuildQSelector();
+completedTabs.add(0);
+document.getElementById('progressBar').style.width = '17%';
+fetchQuestionsFromGitHub();
+</script>
+</body>
+</html>
