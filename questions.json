@@ -1,0 +1,33 @@
+[
+  {
+    "id": 1773273791900,
+    "q": "Describe the purpose of your Decision Support System and the enterprise problem it aims to solve.",
+    "verb": "Describe",
+    "level": "Describe",
+    "marks": null,
+    "steps": [
+      {
+        "label": "Topic Sentence",
+        "hint": "Clearly state the enterprise problem and the overall purpose of your DSS.",
+        "starter": "The purpose of this Decision Support System is to address the enterprise problem of…"
+      },
+      {
+        "label": "Enterprise Problem Description",
+        "hint": "Briefly explain what the problem is and why it occurs in the enterprise environment.",
+        "starter": "This problem occurs when organisations… which results in…"
+      },
+      {
+        "label": "DSS Solution Overview",
+        "hint": "Describe how the DSS will help solve or support decisions related to the problem.",
+        "starter": "The system will assist users by analysing data and providing recommendations about…"
+      },
+      {
+        "label": "Linking Statement",
+        "hint": "Connect the problem and the DSS purpose.",
+        "starter": "Therefore, the DSS supports enterprise decision-making by…"
+      }
+    ],
+    "teacherQ": true,
+    "createdAt": "12/03/2026"
+  }
+]
