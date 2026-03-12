@@ -65,5 +65,36 @@
     ],
     "teacherQ": true,
     "createdAt": "12/03/2026"
+  },
+  {
+    "id": 1773276430318,
+    "q": "Analyse the needs of the target users of your Decision Support System.",
+    "verb": "Analyse",
+    "level": "Analyse",
+    "marks": null,
+    "steps": [
+      {
+        "label": "Topic Sentence",
+        "hint": "Identify the main user group.",
+        "starter": "The primary users of this Decision Support System are…"
+      },
+      {
+        "label": "User Need 1",
+        "hint": "Explain one important need or requirement.",
+        "starter": "One key need of these users is… because…"
+      },
+      {
+        "label": "User Need 2",
+        "hint": "Explain another need related to decision-making or efficiency.",
+        "starter": "Another important requirement is… which helps users to…"
+      },
+      {
+        "label": "Impact on System Design",
+        "hint": "Link the user needs to system features.",
+        "starter": "These needs influence the design of the system by requiring…"
+      }
+    ],
+    "teacherQ": true,
+    "createdAt": "12/03/2026"
   }
 ]
