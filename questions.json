@@ -127,5 +127,36 @@
     ],
     "teacherQ": true,
     "createdAt": "12/03/2026"
+  },
+  {
+    "id": 1773276767437,
+    "q": "Explain the role of data in supporting decisions within your DSS.",
+    "verb": "Explain",
+    "level": "Explain",
+    "marks": null,
+    "steps": [
+      {
+        "label": "Topic Sentence",
+        "hint": "Introduce the role of data in the DSS",
+        "starter": "Data plays a critical role in the operation of the Decision Support System because…"
+      },
+      {
+        "label": "Data Type 1",
+        "hint": "Describe one type of data used",
+        "starter": "One type of data used by the system is… which helps to…"
+      },
+      {
+        "label": "Data Type 2",
+        "hint": "Decsribe another type of data",
+        "starter": "Another important dataset includes… which allows the system to…"
+      },
+      {
+        "label": "Linking Statement",
+        "hint": "Explain how data leads to decisions",
+        "starter": "By analysing these data sources, the DSS can generate recommendations that…"
+      }
+    ],
+    "teacherQ": true,
+    "createdAt": "12/03/2026"
   }
 ]
