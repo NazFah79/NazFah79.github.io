@@ -96,5 +96,36 @@
     ],
     "teacherQ": true,
     "createdAt": "12/03/2026"
+  },
+  {
+    "id": 1773276605883,
+    "q": "Evaluate the suitability of the recommendations your Decision Support System will produce.",
+    "verb": "Evaluate",
+    "level": "Evaluate",
+    "marks": null,
+    "steps": [
+      {
+        "label": "Topic Sentence",
+        "hint": "State what recommendations the DSS will generate.",
+        "starter": "The Decision Support System will generate recommendations such as…"
+      },
+      {
+        "label": "Strength/Benefit",
+        "hint": "Explain why these recommendations are useful or valuable",
+        "starter": "One advantage of these recommendations is that they allow organisations to…"
+      },
+      {
+        "label": "Limitation/Risk",
+        "hint": "Identify a limitation or challenge",
+        "starter": "However, a limitation of this approach is… which may affect…"
+      },
+      {
+        "label": "Judgement Statement",
+        "hint": "Provide an overall judgement of suitability.",
+        "starter": "Overall, the recommendations produced by the system are suitable because…"
+      }
+    ],
+    "teacherQ": true,
+    "createdAt": "12/03/2026"
   }
 ]
