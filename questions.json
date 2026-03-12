@@ -29,5 +29,41 @@
     ],
     "teacherQ": true,
     "createdAt": "12/03/2026"
+  },
+  {
+    "id": 1773275206341,
+    "q": "Explain how user inputs, the knowledge base and the inference engine work together in your proposed DSS.",
+    "verb": "Explain",
+    "level": "Explain",
+    "marks": null,
+    "steps": [
+      {
+        "label": "Topic Sentence",
+        "hint": "Introduce the main components of the DSS you will explain.",
+        "starter": "A Decision Support System operates through several components including…"
+      },
+      {
+        "label": "Component 1 (User Input)",
+        "hint": "Explain what data the user provides and why it is needed.",
+        "starter": "Firstly, the user interface collects inputs such as… which allow the system to…"
+      },
+      {
+        "label": "Component 2 (Knowledge Base)",
+        "hint": "Explain what the knowledge base stores and how it supports decision making.",
+        "starter": "The knowledge base stores information such as… allowing the system to…"
+      },
+      {
+        "label": "Component 3 (Inference Engine)",
+        "hint": "Explain how rules or logic generate decisions.",
+        "starter": "The inference engine processes the input data by applying rules to…"
+      },
+      {
+        "label": "Linking Sentence",
+        "hint": "Explain how the components interact together.",
+        "starter": "Together, these components enable the DSS to generate recommendations by…"
+      }
+    ],
+    "teacherQ": true,
+    "createdAt": "12/03/2026"
   }
 ]
