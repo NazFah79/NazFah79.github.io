@@ -1849,8 +1849,25 @@ function getTeacherPassword() { return localStorage.getItem(TP_PW_KEY) || DEFAUL
 function getTeacherQuestions() { try { return JSON.parse(localStorage.getItem(TP_QS_KEY)) || []; } catch { return []; } }
 function saveTeacherQuestionsToStorage(qs) { localStorage.setItem(TP_QS_KEY, JSON.stringify(qs)); }
 function getDisplaySettings() { try { return JSON.parse(localStorage.getItem(TP_DISP_KEY)) || { teacherFirst: true, hideBuiltIn: false }; } catch { return { teacherFirst: true, hideBuiltIn: false }; } }
-function getGhConfig() { try { return JSON.parse(localStorage.getItem(TP_GH_KEY)) || {}; } catch { return {}; } }
-
+//function getGhConfig() { try { return JSON.parse(localStorage.getItem(TP_GH_KEY)) || {}; } catch { return {}; } }
+function getGhConfig() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(TP_GH_KEY)) || {};
+    return {
+      owner: saved.owner || "nazfah79",
+      repo: saved.repo || "nazfah79.github.io",
+      branch: saved.branch || "main",
+      path: saved.path || "questions.json"
+    };
+  } catch {
+    return {
+      owner: "nazfah79",
+      repo: "nazfah79.github.io",
+      branch: "main",
+      path: "questions.json"
+    };
+  }
+}
 // STUDENT: fetch questions.json from GitHub on page load
 async function fetchQuestionsFromGitHub() {
   let owner = '', repo = '', branch = 'main', path = 'questions.json';
