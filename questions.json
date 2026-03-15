@@ -297,5 +297,30 @@
       ]
     }
   ],
-  "grader": []
+  "grader": [
+    {
+      "q": "What is an outfit recommending Decision Support System and how does it help users decide what to wear?",
+      "text": "An outfit recommending DSS is a system that helps users decide what clothes to wear. It takes inputs such as weather conditions, dress codes and user preferences. The system processes this information and generates a recommended outfit for the user.",
+      "correctLevel": 1,
+      "explanation": "Why?\nThe response:\nStates what the system is\nIdentifies basic characteristics\nDoes not explain relationships, break down components, or make judgements\nThis is typical define-level writing, where the student simply identifies or states the concept."
+    },
+    {
+      "q": "How does an outfit recommending DSS assist users in making clothing decisions?",
+      "text": "The outfit recommending DSS helps users decide what to wear by analysing several factors that influence clothing choices. These factors include weather conditions, user preferences and dress code requirements. For example, if the weather is cold and the user prefers casual clothing, the system may recommend wearing a jacket, jeans and sneakers. By combining multiple inputs, the DSS helps users make faster and more informed clothing decisions.",
+      "correctLevel": 3,
+      "explanation": "The response:\nDescribes how the system works\nShows relationships between inputs and outputs\nGives a simple example scenario\nHowever, it does not break down components deeply or evaluate effectiveness.\nThis demonstrates explain-level writing."
+    },
+    {
+      "q": "How do existing outfit recommendation systems compare when solving the problem of choosing suitable clothing?",
+      "text": "Several outfit recommendation systems currently exist, such as weather-based clothing apps and fashion styling platforms [provide links and examples]. These systems typically recommend outfits based on weather forecasts or fashion trends. However, many of these systems do not consider multiple factors simultaneously, such as personal preferences, dress codes and wardrobe availability. As a result, their recommendations may not always be practical for users. Therefore, an outfit recommending DSS that integrates these multiple data sources would provide more accurate and personalised recommendations.",
+      "correctLevel": 4,
+      "explanation": "The response:\nIdentifies multiple systems\nBreaks down features and limitations\nShows relationships between system design and user needs\nExplains why existing systems may not fully solve the problem\nThis is characteristic of analyse-level responses, where the student examines components and relationships."
+    },
+    {
+      "q": "How suitable are existing outfit recommendation systems for helping users make clothing decisions?",
+      "text": "Existing outfit recommendation systems provide useful suggestions but often lack personalisation and contextual awareness. When assessed against criteria such as usability, decision accuracy and flexibility, many of these systems rely heavily on fashion trends rather than practical user needs. This can result in recommendations that do not match the user’s available wardrobe or dress code requirements. Therefore, a more advanced DSS that integrates weather data, personal clothing inventory and user preferences would produce more suitable recommendations and improve the overall decision-making process. [Provide visuals/revies etc]",
+      "correctLevel": 5,
+      "explanation": "The response:\nUses criteria such as usability, accuracy and flexibility\nIdentifies strengths and weaknesses\nMakes a judgement about suitability\nProposes a better DSS approach\nThis reflects evaluate-level writing, where students assess effectiveness and justify conclusions."
+    }
+  ]
 }
