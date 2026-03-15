@@ -1,0 +1,1864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALARM Writing Coach — Year 12 Enterprise Computing</title>
+<style>
+  :root {
+    --primary: #1a3a5c;
+    --accent: #e8a020;
+    --accent2: #2e7d32;
+    --bg: #f4f6f9;
+    --card: #ffffff;
+    --text: #1a1a2e;
+    --muted: #6b7280;
+    --border: #d1d5db;
+    --level1: #4caf50;
+    --level2: #8bc34a;
+    --level3: #ff9800;
+    --level4: #f44336;
+    --level5: #9c27b0;
+    --level6: #3f51b5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+  
+  /* HEADER */
+  header { background: var(--primary); color: white; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 100; }
+  header h1 { font-size: 1.3rem; font-weight: 700; letter-spacing: 0.5px; }
+  header .sub { font-size: 0.8rem; opacity: 0.75; }
+  #teacherBtn { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: background 0.2s; }
+  #teacherBtn:hover { background: rgba(255,255,255,0.25); }
+
+  /* NAV TABS */
+  nav { background: white; border-bottom: 2px solid var(--border); display: flex; gap: 0; overflow-x: auto; }
+  .nav-tab { flex: 1 0 auto; padding: 12px 16px; border: none; background: none; font-size: 0.82rem; font-weight: 600; color: var(--muted); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; transition: all 0.2s; min-width: 110px; text-align: center; }
+  .nav-tab:hover { color: var(--primary); background: #f9fafb; }
+  .nav-tab.active { color: var(--primary); border-bottom-color: var(--accent); background: white; }
+
+  /* MAIN */
+  main { flex: 1; padding: 24px; max-width: 980px; margin: 0 auto; width: 100%; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* CARDS & BOXES */
+  .card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); border: 1px solid var(--border); }
+  .card h2 { color: var(--primary); font-size: 1.3rem; margin-bottom: 12px; }
+  .card h3 { color: var(--primary); font-size: 1.05rem; margin-bottom: 8px; }
+  .card p { line-height: 1.7; color: #374151; margin-bottom: 10px; }
+  .highlight-box { background: #fff8e1; border-left: 4px solid var(--accent); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 14px 0; }
+  .warn-box { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 14px 0; }
+
+  /* ALARM LEVELS */
+  .alarm-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 16px 0; }
+  .alarm-cell { border-radius: 10px; padding: 14px 12px; text-align: center; color: white; }
+  .alarm-cell .verb { font-weight: 700; font-size: 1rem; }
+  .alarm-cell .desc { font-size: 0.75rem; opacity: 0.9; margin-top: 4px; }
+  .lvl1 { background: var(--level1); }
+  .lvl2 { background: var(--level2); }
+  .lvl3 { background: var(--level3); }
+  .lvl4 { background: var(--level4); }
+  .lvl5 { background: var(--level5); }
+  .lvl6 { background: var(--level6); }
+
+  /* NESA KEY VERBS TABLE */
+  .verb-table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+  .verb-table th { background: var(--primary); color: white; padding: 10px 14px; text-align: left; font-size: 0.85rem; }
+  .verb-table td { padding: 9px 14px; font-size: 0.88rem; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+  .verb-table tr:nth-child(even) td { background: #f9fafb; }
+  .verb-table .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; color: white; font-size: 0.72rem; font-weight: 600; }
+
+  /* ACTIVITY PANELS */
+  .activity-box { background: linear-gradient(135deg, #1a3a5c 0%, #2e5090 100%); border-radius: 12px; padding: 24px; color: white; margin-top: 20px; }
+  .activity-box h3 { color: var(--accent); margin-bottom: 14px; font-size: 1.1rem; }
+  .activity-box p { opacity: 0.9; margin-bottom: 14px; }
+
+  /* MODULE 1 — random verb match activity */
+  #m1-activity-area { margin-top: 8px; }
+  #m1-verb-display { font-size: 2rem; font-weight: 800; color: var(--accent); text-align: center; padding: 18px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-bottom: 16px; letter-spacing: 1px; }
+  .def-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+  .def-btn { background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); color: white; padding: 12px 16px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; text-align: left; transition: all 0.2s; line-height: 1.4; }
+  .def-btn:hover { background: rgba(255,255,255,0.2); }
+  .def-btn.correct { background: rgba(76,175,80,0.6); border-color: #4caf50; }
+  .def-btn.wrong { background: rgba(244,67,54,0.4); border-color: #f44336; }
+  #m1-feedback { text-align: center; font-size: 1rem; font-weight: 600; margin-top: 10px; min-height: 28px; }
+  .act-btn { background: var(--accent); color: white; border: none; padding: 9px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem; margin-top: 12px; transition: background 0.2s; }
+  .act-btn:hover { background: #c87e10; }
+  #m1-score { font-size: 0.9rem; opacity: 0.8; margin-top: 8px; text-align: center; }
+
+  /* MODULE 2 — Sort the Verb */
+  #m2-verb-pool { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+  .verb-chip { background: var(--accent); color: white; padding: 8px 16px; border-radius: 20px; font-weight: 700; cursor: pointer; user-select: none; transition: transform 0.15s, opacity 0.2s; font-size: 0.92rem; }
+  .verb-chip:hover { transform: scale(1.06); }
+  .verb-chip.selected { opacity: 0.4; pointer-events: none; }
+  .level-buckets { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 14px; }
+  .level-bucket { border-radius: 10px; padding: 12px 10px; min-height: 90px; color: white; }
+  .level-bucket .bkt-title { font-weight: 700; font-size: 0.82rem; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .level-bucket .placed-verbs { display: flex; flex-wrap: wrap; gap: 4px; }
+  .placed-chip { background: rgba(255,255,255,0.25); padding: 3px 10px; border-radius: 12px; font-size: 0.78rem; font-weight: 600; cursor: pointer; }
+  .placed-chip.correct-placed { background: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.8); }
+  .placed-chip.wrong-placed { background: rgba(244,67,54,0.5); border: 1px solid #f44336; }
+  #m2-result { background: white; border-radius: 10px; padding: 14px 18px; color: var(--text); margin-top: 12px; display: none; }
+  #m2-result h4 { color: var(--primary); margin-bottom: 8px; }
+  #m2-hint-list li { font-size: 0.85rem; margin-bottom: 4px; }
+  #m2-hint-list .hint-correct { color: var(--accent2); }
+  #m2-hint-list .hint-wrong { color: #f44336; }
+
+  /* MODULE 3 — VSCC */
+  .vscc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 20px; }
+  .vscc-card { border-radius: 12px; padding: 20px 18px; color: white; }
+  .vscc-card .letter { font-size: 2.5rem; font-weight: 900; opacity: 0.3; line-height: 1; }
+  .vscc-card .label { font-size: 1rem; font-weight: 700; margin: 4px 0; }
+  .vscc-card .meaning { font-size: 0.85rem; opacity: 0.9; line-height: 1.5; }
+  .vscc-v { background: linear-gradient(135deg, #1565c0, #0d47a1); }
+  .vscc-s { background: linear-gradient(135deg, #2e7d32, #1b5e20); }
+  .vscc-c1 { background: linear-gradient(135deg, #e65100, #bf360c); }
+  .vscc-c2 { background: linear-gradient(135deg, #6a1b9a, #4a148c); }
+
+  .question-card { border-radius: 12px; padding: 20px; margin-bottom: 14px; border: 2px solid transparent; }
+  .question-card.card-pA { background: linear-gradient(135deg, #1a3a5c, #2455a4); border-color: #1a3a5c; }
+  .question-card.card-pB { background: linear-gradient(135deg, #4a148c, #7b1fa2); border-color: #7b1fa2; }
+  .question-card .q-text { color: white; font-weight: 700; font-size: 1rem; margin-bottom: 12px; line-height: 1.5; }
+  .vscc-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .vscc-input-group label { font-size: 0.78rem; font-weight: 700; color: rgba(255,255,255,0.85); margin-bottom: 3px; display: block; }
+  .vscc-input-group input { width: 100%; padding: 7px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.15); color: white; font-size: 0.85rem; }
+  .vscc-input-group input::placeholder { color: rgba(255,255,255,0.5); }
+  .check-vscc { background: var(--accent); color: white; border: none; padding: 8px 18px; border-radius: 7px; cursor: pointer; font-weight: 600; font-size: 0.85rem; margin-top: 10px; }
+  .vscc-feedback { font-size: 0.83rem; margin-top: 8px; color: rgba(255,255,255,0.9); background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 6px; display: none; line-height: 1.6; }
+
+  /* MODULE 4 — Build a Response */
+  .q-select { width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.92rem; background: white; color: var(--text); margin-bottom: 16px; }
+  .step-row { display: grid; grid-template-columns: 140px 1fr; gap: 10px; margin-bottom: 10px; align-items: start; }
+  .step-label { background: var(--primary); color: white; padding: 8px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; text-align: center; }
+  .step-row textarea { padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.88rem; resize: vertical; min-height: 64px; font-family: inherit; line-height: 1.5; width: 100%; }
+  .step-hint { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+  #assembled-response { background: linear-gradient(135deg, #f0f4ff, #e8f5e9); border: 2px solid var(--primary); border-radius: 12px; padding: 20px 24px; min-height: 120px; font-size: 0.93rem; line-height: 1.8; color: var(--text); white-space: pre-wrap; }
+  .assemble-bar { display: flex; gap: 10px; margin: 14px 0; }
+  .btn-primary { background: var(--primary); color: white; border: none; padding: 10px 22px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
+  .btn-primary:hover { background: #0f2a45; }
+  .btn-outline { background: white; color: var(--primary); border: 2px solid var(--primary); padding: 9px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+  .btn-outline:hover { background: var(--primary); color: white; }
+  .color-v { color: #1565c0; font-weight: 700; }
+  .color-s { color: #2e7d32; font-weight: 700; }
+  .color-c { color: #e65100; font-weight: 700; }
+  .color-k { color: #6a1b9a; font-weight: 700; }
+  .response-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 10px; font-size: 0.82rem; }
+  .response-legend span { display: flex; align-items: center; gap: 5px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
+  /* MODULE 5 — Level Grader */
+  .grader-card { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+  .grader-card .sample-q { font-size: 0.88rem; color: var(--muted); margin-bottom: 8px; }
+  .grader-card .sample-text { font-size: 0.92rem; line-height: 1.7; color: var(--text); padding: 12px; background: #f9fafb; border-radius: 8px; margin-bottom: 12px; }
+  .level-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+  .level-select-btn { padding: 7px 14px; border-radius: 20px; border: 2px solid; font-weight: 600; font-size: 0.82rem; cursor: pointer; background: white; transition: all 0.2s; }
+  .grader-feedback { margin-top: 10px; padding: 10px 14px; border-radius: 8px; font-size: 0.88rem; display: none; }
+  .grader-feedback.correct { background: #e8f5e9; border: 1px solid #a5d6a7; color: #1b5e20; }
+  .grader-feedback.wrong { background: #fce4ec; border: 1px solid #f48fb1; color: #880e4f; }
+
+  /* TEACHER PANEL */
+  #teacher-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200; align-items: center; justify-content: center; }
+  #teacher-overlay.open { display: flex; }
+  #teacher-panel { background: white; border-radius: 16px; padding: 0; width: 700px; max-width: 96vw; max-height: 90vh; overflow-y: auto; position: relative; }
+  .tp-header { background: var(--primary); color: white; padding: 18px 24px; border-radius: 16px 16px 0 0; display: flex; align-items: center; justify-content: space-between; }
+  .tp-header h2 { font-size: 1.1rem; }
+  #tp-close { background: none; border: none; color: white; font-size: 1.4rem; cursor: pointer; line-height: 1; }
+  .tp-body { padding: 22px 24px; }
+  .tp-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 18px; }
+  .tp-tab { padding: 9px 16px; border: none; background: none; font-weight: 600; font-size: 0.85rem; color: var(--muted); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; }
+  .tp-tab.active { color: var(--primary); border-bottom-color: var(--accent); }
+  .tp-section { display: none; }
+  .tp-section.active { display: block; }
+  .tp-lock { text-align: center; padding: 30px 0; }
+  .tp-lock input { width: 240px; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.95rem; margin-bottom: 10px; display: block; margin: 0 auto 10px; }
+  .form-group { margin-bottom: 14px; }
+  .form-group label { display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 4px; color: var(--primary); }
+  .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.88rem; font-family: inherit; }
+  .form-group textarea { min-height: 80px; resize: vertical; }
+  .step-editor { background: #f9fafb; border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 8px; }
+  .step-editor input { width: 100%; padding: 7px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem; margin-bottom: 6px; }
+  .step-editor input:last-child { margin-bottom: 0; }
+  .q-list-item { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; padding: 12px; background: #f9fafb; border-radius: 8px; margin-bottom: 8px; border: 1px solid var(--border); }
+  .q-list-item .q-info { flex: 1; }
+  .q-list-item .q-info strong { font-size: 0.88rem; }
+  .q-list-item .q-info small { color: var(--muted); font-size: 0.78rem; }
+  .del-btn { background: #fce4ec; color: #c62828; border: none; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; }
+
+  /* LEVEL GRADER TEACHER PANEL */
+  .grader-q-item { background: #f9fafb; border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+  .grader-q-item textarea { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem; margin-bottom: 6px; min-height: 70px; font-family: inherit; }
+  .grader-q-item select { padding: 7px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem; margin-right: 8px; }
+
+  /* FINAL CHECK */
+  .quick-ref { display: grid; gap: 10px; margin-bottom: 20px; }
+  .ref-row { display: grid; grid-template-columns: 140px 1fr; gap: 12px; align-items: center; padding: 12px 16px; border-radius: 8px; background: white; border: 1px solid var(--border); }
+  .ref-marks { font-weight: 700; color: var(--primary); font-size: 0.9rem; }
+  .ref-verbs { font-size: 0.88rem; line-height: 1.5; }
+  .checklist { list-style: none; }
+  .checklist li { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; font-size: 0.9rem; }
+  .checklist li input[type=checkbox] { margin-top: 2px; width: 17px; height: 17px; accent-color: var(--primary); }
+  .quiz-q { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 12px; }
+  .quiz-q p { font-weight: 600; margin-bottom: 10px; font-size: 0.92rem; }
+  .quiz-opts { display: flex; flex-direction: column; gap: 6px; }
+  .quiz-opt { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; cursor: pointer; }
+  .quiz-opt input { accent-color: var(--primary); }
+  .quiz-result { margin-top: 8px; font-size: 0.85rem; display: none; }
+
+  /* PROGRESS BAR */
+  .nav-progress { display: flex; gap: 6px; align-items: center; padding: 6px 24px; background: white; border-bottom: 1px solid var(--border); }
+  .prog-step { width: 28px; height: 6px; border-radius: 3px; background: #e5e7eb; transition: background 0.3s; }
+  .prog-step.done { background: var(--accent); }
+  .prog-step.active { background: var(--primary); }
+  .prog-label { font-size: 0.75rem; color: var(--muted); margin-left: 4px; }
+
+  /* NAV BUTTONS */
+  .nav-bar { display: flex; justify-content: space-between; margin-top: 24px; }
+  .nav-bar .btn-primary, .nav-bar .btn-outline { min-width: 120px; }
+
+  /* FOOTER */
+  footer { background: var(--primary); color: rgba(255,255,255,0.75); text-align: center; padding: 10px 16px; font-size: 0.8rem; margin-top: auto; }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    main { padding: 14px; }
+    .vscc-inputs { grid-template-columns: 1fr; }
+    .step-row { grid-template-columns: 1fr; }
+    .ref-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div style="font-size:0.7rem;opacity:0.6;">ALARM Writing Coach</div>
+    <h1>ALARM Writing Coach</h1>
+    <div class="sub">Yr 12 Enterprise Computing</div>
+  </div>
+  <button id="teacherBtn">⚙ Teacher</button>
+</header>
+
+<nav>
+  <button class="nav-tab active" data-tab="m1">1 · What is ALARM?</button>
+  <button class="nav-tab" data-tab="m2">2 · NESA Key Verbs</button>
+  <button class="nav-tab" data-tab="m3">3 · VSCC Breakdown</button>
+  <button class="nav-tab" data-tab="m4">4 · Build a Response</button>
+  <button class="nav-tab" data-tab="m5">5 · Level Grader</button>
+  <button class="nav-tab" data-tab="m6">6 · Final Check</button>
+</nav>
+
+<div class="nav-progress">
+  <div class="prog-step active" id="ps1"></div>
+  <div class="prog-step" id="ps2"></div>
+  <div class="prog-step" id="ps3"></div>
+  <div class="prog-step" id="ps4"></div>
+  <div class="prog-step" id="ps5"></div>
+  <div class="prog-step" id="ps6"></div>
+  <span class="prog-label" id="prog-label">Module 1 of 6</span>
+</div>
+
+<main>
+
+<!-- ========== MODULE 1 ========== -->
+<section class="section active" id="m1">
+  <div class="card">
+    <h2>What is ALARM?</h2>
+    <p><strong>ALARM stands for A Learning and Responding Matrix.</strong> It is a tool that groups NESA's key verbs (directive verbs) by the depth of thinking and response they require — from simple recall all the way to critical evaluation.</p>
+    <div class="highlight-box">
+      💡 <strong>The key insight:</strong> ALARM is not 5 separate named levels — it's a <em>matrix</em> or spectrum. Key verbs on the left require short, factual answers. Key verbs on the right demand longer, higher-order responses with evidence, reasoning, and judgement. The mark allocation of a question usually signals where on the matrix it sits.
+    </div>
+    <h3 style="margin-top:16px;">ALARM Level Overview</h3>
+    <div class="alarm-grid">
+      <div class="alarm-cell lvl1"><div class="verb">Identify / Define / List</div><div class="desc">Recall facts. 1–2 marks.</div></div>
+      <div class="alarm-cell lvl2"><div class="verb">Describe / Outline</div><div class="desc">Key features + detail. 2–4 marks.</div></div>
+      <div class="alarm-cell lvl3"><div class="verb">Explain / Compare</div><div class="desc">Cause & effect, examples. 4–6 marks.</div></div>
+      <div class="alarm-cell lvl4"><div class="verb">Analyse / Discuss</div><div class="desc">Components + implications. 6–8 marks.</div></div>
+      <div class="alarm-cell lvl5"><div class="verb">Evaluate / Assess</div><div class="desc">Judgement + criteria. 8+ marks.</div></div>
+      <div class="alarm-cell lvl6"><div class="verb">Critically Analyse</div><div class="desc">Challenge assumptions. Extended.</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>How to use ALARM in an exam</h3>
+    <ol style="padding-left:20px;line-height:2;">
+      <li>Spot the <strong>directive verb</strong> in the question (e.g. "Explain", "Evaluate")</li>
+      <li>Locate it on the ALARM matrix — how deep does your answer need to go?</li>
+      <li>Check the <strong>mark allocation</strong> — more marks = more depth needed</li>
+      <li>Plan your response using VSCC structure (Verb, Subject, Criteria, Content)</li>
+      <li>Write at the correct depth — don't just describe when asked to evaluate!</li>
+    </ol>
+    <div class="warn-box" style="margin-top:14px;">
+      ⚠️ <strong>Common mistake:</strong> Students who write "describe" answers for "evaluate" questions miss marks even when their facts are correct. ALARM helps you avoid this.
+    </div>
+  </div>
+
+  <!-- MODULE 1 ACTIVITY -->
+  <div class="activity-box">
+    <h3>🎯 Activity — Match the Key Verb</h3>
+    <p>A random NESA key verb will appear. Select its correct definition from the options below. Score 5 correct to complete this activity!</p>
+    <div id="m1-activity-area">
+      <div id="m1-verb-display">—</div>
+      <div class="def-options" id="m1-options"></div>
+      <div id="m1-feedback"></div>
+      <div id="m1-score">Score: 0 / 0</div>
+      <div style="text-align:center;margin-top:10px;">
+        <button class="act-btn" id="m1-next-btn">Start Activity</button>
+      </div>
+    </div>
+  </div>
+  <div class="nav-bar">
+    <span></span>
+    <button class="btn-primary" onclick="goTab('m2')">Next: NESA Key Verbs →</button>
+  </div>
+</section>
+
+<!-- ========== MODULE 2 ========== -->
+<section class="section" id="m2">
+  <div class="card">
+    <h2>NESA Key Verbs</h2>
+    <p>These are the directive verbs NESA uses in HSC exams across all subjects. Each verb signals exactly how to structure your answer. Use the ALARM matrix to determine the depth required.</p>
+    <div class="highlight-box">🎯 Each key verb below shows its ALARM level and what you must include in your response for full marks.</div>
+    <table class="verb-table">
+      <thead>
+        <tr><th>Key Verb</th><th>ALARM Level</th><th>What to do</th><th>Response depth</th></tr>
+      </thead>
+      <tbody id="verb-table-body"></tbody>
+    </table>
+  </div>
+
+  <div class="activity-box">
+    <h3>🔀 Activity — Sort the Verb</h3>
+    <p>10 random key verbs are shown below. Click a verb, then click the ALARM level bucket it belongs to. Reset to get a new set of 10 verbs!</p>
+    <div id="m2-verb-pool"></div>
+    <div class="level-buckets" id="m2-buckets"></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;">
+      <button class="act-btn" id="m2-check-btn">✓ Check My Answers</button>
+      <button class="act-btn" style="background:#555;" id="m2-reset-btn">↺ Reset (New Verbs)</button>
+    </div>
+    <div id="m2-result">
+      <h4 id="m2-result-title"></h4>
+      <ul id="m2-hint-list"></ul>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <button class="btn-outline" onclick="goTab('m1')">← Back</button>
+    <button class="btn-primary" onclick="goTab('m3')">Next: VSCC Breakdown →</button>
+  </div>
+</section>
+
+<!-- ========== MODULE 3 ========== -->
+<section class="section" id="m3">
+  <div class="card">
+    <h2>VSCC Breakdown</h2>
+    <p>Before writing, decode the question using <strong>VSCC</strong>: identify the <strong>Verb</strong>, <strong>Subject</strong>, <strong>Criteria/Conditions</strong>, and plan your <strong>Content</strong>. This ensures you answer exactly what is asked.</p>
+    <div class="vscc-grid">
+      <div class="vscc-card vscc-v">
+        <div class="letter">V</div>
+        <div class="label">Verb</div>
+        <div class="meaning">The directive verb — tells you <em>how</em> to answer (e.g. Explain, Evaluate)</div>
+      </div>
+      <div class="vscc-card vscc-s">
+        <div class="letter">S</div>
+        <div class="label">Subject</div>
+        <div class="meaning">The topic the question is about (e.g. cloud computing, cybersecurity)</div>
+      </div>
+      <div class="vscc-card vscc-c1">
+        <div class="letter">C</div>
+        <div class="label">Criteria / Conditions</div>
+        <div class="meaning">Any specific conditions or focus (e.g. "in terms of cost", "for SMEs")</div>
+      </div>
+      <div class="vscc-card vscc-c2">
+        <div class="letter">C</div>
+        <div class="label">Content</div>
+        <div class="meaning">The knowledge, examples and evidence you'll include</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Part A — Explicit Verb Questions</h3>
+    <p style="margin-bottom:14px;">The directive verb is clearly stated. Identify each VSCC component.</p>
+    <div id="m3-partA"></div>
+  </div>
+
+  <div class="card">
+    <h3>Part B — Hidden Verb Questions</h3>
+    <p style="margin-bottom:14px;">Some questions hide the directive verb behind phrasing like "In what ways…" or "To what extent…". Identify the <em>implied</em> verb before decoding the rest.</p>
+    <div id="m3-partB"></div>
+  </div>
+
+  <div class="nav-bar">
+    <button class="btn-outline" onclick="goTab('m2')">← Back</button>
+    <button class="btn-primary" onclick="goTab('m4')">Next: Build a Response →</button>
+  </div>
+</section>
+
+<!-- ========== MODULE 4 ========== -->
+<section class="section" id="m4">
+  <div class="card">
+    <h2>Build a Response</h2>
+    <p>Select a question, then write each part of your response step-by-step. Click <strong>Assemble Response</strong> to combine all parts into a single paragraph.</p>
+    <label style="font-weight:600;font-size:0.9rem;display:block;margin-bottom:6px;">Select a Question:</label>
+    <select class="q-select" id="m4-q-select" onchange="loadM4Question()"></select>
+    <div id="m4-steps-area"></div>
+    <div class="assemble-bar">
+      <button class="btn-primary" onclick="assembleResponse()">⚡ Assemble Response</button>
+      <button class="btn-outline" onclick="clearM4()">✕ Clear</button>
+    </div>
+    <h3 style="margin-bottom:8px;">Your Assembled Response</h3>
+    <div class="response-legend">
+      <span><span class="dot" style="background:#1565c0;"></span><span class="color-v">Verb/Claim</span></span>
+      <span><span class="dot" style="background:#2e7d32;"></span><span class="color-s">Subject/Context</span></span>
+      <span><span class="dot" style="background:#e65100;"></span><span class="color-c">Criteria/Evidence</span></span>
+      <span><span class="dot" style="background:#6a1b9a;"></span><span class="color-k">Conclusion/Judgement</span></span>
+    </div>
+    <div id="assembled-response" style="min-height:80px;font-style:italic;color:#9ca3af;">Your assembled paragraph will appear here...</div>
+  </div>
+
+  <div class="card" id="m4-templates">
+    <h3>Response Structure Templates by ALARM Level</h3>
+    <div id="template-list"></div>
+  </div>
+
+  <div class="nav-bar">
+    <button class="btn-outline" onclick="goTab('m3')">← Back</button>
+    <button class="btn-primary" onclick="goTab('m5')">Next: Level Grader →</button>
+  </div>
+</section>
+
+<!-- ========== MODULE 5 ========== -->
+<section class="section" id="m5">
+  <div class="card">
+    <h2>Level Grader</h2>
+    <div class="highlight-box" style="margin-bottom:14px;">🔍 Read each sample response and judge which ALARM level it demonstrates. No level labels are shown — judge from the depth of thinking alone.</div>
+    <div id="m5-grader-cards"></div>
+  </div>
+  <div class="nav-bar">
+    <button class="btn-outline" onclick="goTab('m4')">← Back</button>
+    <button class="btn-primary" onclick="goTab('m6')">Next: Final Check →</button>
+  </div>
+</section>
+
+<!-- ========== MODULE 6 ========== -->
+<section class="section" id="m6">
+  <div class="card">
+    <h2>Final Check</h2>
+    <p>Quick reference and quiz — make sure you've got the key concepts locked in before your exam.</p>
+    <h3 style="margin-top:14px;margin-bottom:10px;">ALARM Quick Reference — Mark &amp; Depth Guide</h3>
+    <div class="quick-ref">
+      <div class="ref-row"><div class="ref-marks">1–2 marks</div><div class="ref-verbs"><strong>Identify / Define / List / Recall / Name</strong> — one or two sentences, factual only</div></div>
+      <div class="ref-row"><div class="ref-marks">2–4 marks</div><div class="ref-verbs"><strong>Describe / Outline / Summarise / Classify</strong> — key features with some detail</div></div>
+      <div class="ref-row"><div class="ref-marks">4–6 marks</div><div class="ref-verbs"><strong>Explain / Compare / Contrast / Apply</strong> — cause &amp; effect, reason why, examples required</div></div>
+      <div class="ref-row"><div class="ref-marks">6–8 marks</div><div class="ref-verbs"><strong>Analyse / Examine / Discuss / Interpret</strong> — components + relationships + implications</div></div>
+      <div class="ref-row"><div class="ref-marks">8+ marks</div><div class="ref-verbs"><strong>Evaluate / Assess / Justify / Recommend</strong> — judgement with supported criteria, pros/cons</div></div>
+      <div class="ref-row"><div class="ref-marks">Extended</div><div class="ref-verbs"><strong>Critically Analyse / Critically Evaluate</strong> — all of the above + challenge assumptions, limitations</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Pre-Write VSCC Checklist</h3>
+    <ul class="checklist">
+      <li><input type="checkbox"> I have identified the <strong>directive verb</strong> and located it on the ALARM</li>
+      <li><input type="checkbox"> I know the <strong>subject</strong> — exactly what the question is about</li>
+      <li><input type="checkbox"> I have noted any <strong>criteria/conditions</strong> in the question</li>
+      <li><input type="checkbox"> I have planned the <strong>content</strong> — key points, examples, evidence</li>
+      <li><input type="checkbox"> My response depth matches the <strong>mark allocation</strong></li>
+      <li><input type="checkbox"> I have not merely described when a higher-order verb was used</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Final Quiz — 10 Random Questions</h3>
+    <p style="font-size:0.85rem;color:var(--muted);margin-bottom:14px;">Questions are randomly selected each time. They cover <strong>knowledge</strong> (definitions &amp; levels), <strong>understanding</strong> (applying ALARM to scenarios), and <strong>skill</strong> (identifying errors &amp; VSCC decoding). Click Reset to get a completely new set.</p>
+    <div id="quiz-container"></div>
+    <div style="display:flex;align-items:center;gap:16px;margin-top:14px;flex-wrap:wrap;">
+      <button class="btn-primary" onclick="submitQuiz()">Submit Quiz</button>
+      <button class="btn-outline" onclick="resetQuiz()">↺ New Questions</button>
+      <span id="quiz-score-display" style="font-weight:700;font-size:1rem;color:var(--primary);">0/10 Score</span>
+    </div>
+  </div>
+  <div class="nav-bar">
+    <button class="btn-outline" onclick="goTab('m5')">← Back</button>
+    <span></span>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ TEACHER PANEL ============ -->
+<div id="teacher-overlay">
+  <div id="teacher-panel">
+    <div class="tp-header">
+      <h2>⚙ Teacher Panel</h2>
+      <button id="tp-close">✕</button>
+    </div>
+    <div class="tp-body">
+      <div id="tp-lock-screen">
+        <div class="tp-lock">
+          <p style="margin-bottom:14px;color:var(--muted);">Enter the teacher password to manage questions.</p>
+          <input type="password" id="tp-pwd-input" placeholder="Password" />
+          <div style="margin-top:10px;">
+            <button class="btn-primary" onclick="unlockTeacher()">Unlock Panel</button>
+          </div>
+          <p style="margin-top:10px;font-size:0.8rem;color:var(--muted);">Default password: <code>teacher2025</code></p>
+          <p id="tp-pwd-err" style="color:#f44336;font-size:0.85rem;margin-top:6px;"></p>
+        </div>
+      </div>
+      <div id="tp-content" style="display:none;">
+        <div class="tp-tabs">
+          <button class="tp-tab active" data-tptab="tp-vscc">Module 3 (VSCC)</button>
+          <button class="tp-tab" data-tptab="tp-build">Module 4 (Build)</button>
+          <button class="tp-tab" data-tptab="tp-grader">Module 5 (Grader)</button>
+          <button class="tp-tab" data-tptab="tp-settings">⚙ Settings &amp; GitHub</button>
+        </div>
+
+        <!-- VSCC Questions -->
+        <div class="tp-section active" id="tp-vscc">
+          <h3 style="color:var(--primary);margin-bottom:10px;">Set VSCC Questions (Module 3)</h3>
+          <p style="font-size:0.85rem;color:var(--muted);margin-bottom:14px;">Add explicit and hidden-verb questions for students to practise VSCC decoding.</p>
+          <div class="form-group">
+            <label>Question Text *</label>
+            <textarea id="tp-vscc-q" placeholder="e.g. Explain how cloud computing benefits SMEs in terms of cost."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Part (A=Explicit Verb, B=Hidden Verb)</label>
+            <select id="tp-vscc-part">
+              <option value="A">Part A — Explicit Verb</option>
+              <option value="B">Part B — Hidden Verb</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Correct Verb *</label>
+            <input type="text" id="tp-vscc-verb" placeholder="e.g. Explain" />
+          </div>
+          <div class="form-group">
+            <label>Subject (answer hint) *</label>
+            <input type="text" id="tp-vscc-subject" placeholder="e.g. Cloud computing" />
+          </div>
+          <div class="form-group">
+            <label>Criteria/Conditions (answer hint) *</label>
+            <input type="text" id="tp-vscc-criteria" placeholder="e.g. In terms of cost, for SMEs" />
+          </div>
+          <div class="form-group">
+            <label>Content hint</label>
+            <input type="text" id="tp-vscc-content" placeholder="e.g. Cost savings, scalability, no capital expenditure" />
+          </div>
+          <div class="form-group">
+            <label>ALARM Level</label>
+            <select id="tp-vscc-level">
+              <option value="1">Level 1 – Identify/Define</option>
+              <option value="2">Level 2 – Describe/Outline</option>
+              <option value="3" selected>Level 3 – Explain/Compare</option>
+              <option value="4">Level 4 – Analyse/Discuss</option>
+              <option value="5">Level 5 – Evaluate/Assess</option>
+              <option value="6">Level 6 – Critically Analyse</option>
+            </select>
+          </div>
+          <button class="btn-primary" onclick="saveVSCCQuestion()">Save Question →</button>
+          <div id="tp-vscc-list" style="margin-top:18px;"></div>
+          <div style="margin-top:14px;">
+            <button class="act-btn" onclick="exportQuestionsJSON()">📤 Export questions.json</button>
+          </div>
+        </div>
+
+        <!-- Build Questions -->
+        <div class="tp-section" id="tp-build">
+          <h3 style="color:var(--primary);margin-bottom:10px;">Set Build-a-Response Questions (Module 4)</h3>
+          <p style="font-size:0.85rem;color:var(--muted);margin-bottom:14px;">Add questions with scaffolded steps for students to build paragraph responses.</p>
+          <div class="form-group">
+            <label>Question Text *</label>
+            <textarea id="tp-bld-q" placeholder="e.g. Evaluate the effectiveness of encryption as a cybersecurity strategy for businesses."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Key Verb *</label>
+            <input type="text" id="tp-bld-verb" placeholder="e.g. Evaluate" />
+          </div>
+          <div class="form-group">
+            <label>ALARM Level *</label>
+            <select id="tp-bld-level">
+              <option value="Identify">Level 1 – Identify</option>
+              <option value="Describe">Level 2 – Describe</option>
+              <option value="Explain">Level 3 – Explain</option>
+              <option value="Analyse">Level 4 – Analyse</option>
+              <option value="Evaluate" selected>Level 5 – Evaluate</option>
+              <option value="Critically Analyse">Level 6 – Critically Analyse</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Marks Available</label>
+            <input type="number" id="tp-bld-marks" placeholder="e.g. 8" min="1" max="20" />
+          </div>
+          <h4 style="margin-bottom:8px;color:var(--primary);">Response Scaffolding Steps</h4>
+          <div id="tp-bld-steps"></div>
+          <button class="btn-outline" onclick="addBldStep()" style="margin-bottom:12px;">+ Add Step</button>
+          <br/>
+          <button class="btn-primary" onclick="saveBuildQuestion()">Save Question →</button>
+          <div id="tp-bld-list" style="margin-top:18px;"></div>
+        </div>
+
+        <!-- Grader Questions -->
+        <div class="tp-section" id="tp-grader">
+          <h3 style="color:var(--primary);margin-bottom:10px;">Set Level Grader Responses (Module 5)</h3>
+          <p style="font-size:0.85rem;color:var(--muted);margin-bottom:14px;">Add sample student responses for students to judge which ALARM level they demonstrate.</p>
+          <div id="tp-grader-items"></div>
+          <button class="btn-outline" onclick="addGraderItem()">+ Add Response Card</button>
+          <div style="margin-top:14px;">
+            <button class="btn-primary" onclick="saveGraderItems()">Save Grader Items</button>
+          </div>
+        </div>
+
+        <!-- Settings -->
+        <div class="tp-section" id="tp-settings">
+
+          <!-- PASSWORD -->
+          <h3 style="color:var(--primary);margin-bottom:12px;">🔑 Change Teacher Password</h3>
+          <div class="form-group">
+            <label>New Password</label>
+            <input type="password" id="tp-new-pwd" placeholder="New password" />
+          </div>
+          <div class="form-group">
+            <label>Confirm Password</label>
+            <input type="password" id="tp-confirm-pwd" placeholder="Confirm password" />
+          </div>
+          <button class="btn-primary" onclick="changePassword()">Update Password</button>
+          <p id="tp-pwd-change-msg" style="margin-top:8px;font-size:0.85rem;"></p>
+
+          <hr style="margin:22px 0;border-color:var(--border);">
+
+          <!-- GITHUB SYNC -->
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+            <span style="font-size:1.3rem;">🐙</span>
+            <h3 style="color:var(--primary);">GitHub Sync</h3>
+          </div>
+          <p style="font-size:0.85rem;color:var(--muted);margin-bottom:16px;line-height:1.6;">
+            Click <strong>Publish to GitHub</strong> to write all teacher questions as <code>questions.json</code> directly into your GitHub repo. Every student who opens the page will fetch it automatically — no file uploads, no manual steps.<br>
+            You need a GitHub Personal Access Token (PAT) with <strong>Contents: Read &amp; Write</strong> permission.
+          </p>
+
+          <!-- Status banner -->
+          <div id="gh-status-banner" style="display:none;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:0.85rem;"></div>
+
+          <!-- Config fields -->
+          <div class="form-group">
+            <label>GitHub Username *</label>
+            <input type="text" id="gh-user" placeholder="e.g. nazfah79" autocomplete="off" />
+          </div>
+          <div class="form-group">
+            <label>Repository Name *</label>
+            <input type="text" id="gh-repo" placeholder="e.g. alarm-writing-coach" autocomplete="off" />
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div class="form-group">
+              <label>Branch <span style="color:var(--muted);font-weight:400;">(default: main)</span></label>
+              <input type="text" id="gh-branch" placeholder="main" />
+            </div>
+            <div class="form-group">
+              <label>File Path <span style="color:var(--muted);font-weight:400;">(default: questions.json)</span></label>
+              <input type="text" id="gh-path" placeholder="questions.json" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Personal Access Token (PAT) *
+              <a href="https://github.com/settings/tokens/new?description=ALARM+Writing+Coach&scopes=repo" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent);margin-left:8px;font-weight:400;">↗ Create on GitHub</a>
+            </label>
+            <div style="position:relative;">
+              <input type="password" id="gh-pat" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off" style="padding-right:44px;" />
+              <button onclick="togglePAT()" title="Show/hide token" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1rem;color:var(--muted);" id="gh-pat-eye">👁</button>
+            </div>
+            <p style="font-size:0.75rem;color:var(--muted);margin-top:4px;">🔒 Stored in your browser only. Never transmitted anywhere except <code>api.github.com</code>.</p>
+          </div>
+
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
+            <button class="btn-primary" onclick="saveGHConfig()">💾 Save Config</button>
+            <button class="btn-outline" onclick="testGHConnection()">🔌 Test Connection</button>
+            <button style="background:linear-gradient(135deg,#24292e,#404448);color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.9rem;" onclick="publishToGitHub()">🚀 Publish to GitHub</button>
+          </div>
+
+          <!-- Pull from GitHub -->
+          <div style="background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;padding:12px 16px;margin-bottom:16px;">
+            <strong style="font-size:0.88rem;color:var(--primary);">📥 Load questions from GitHub</strong>
+            <p style="font-size:0.82rem;color:var(--muted);margin:4px 0 10px;">Fetch the current <code>questions.json</code> from your repo and load it into the tool (replaces local custom questions).</p>
+            <button class="btn-outline" onclick="loadFromGitHub()" style="font-size:0.85rem;padding:8px 16px;">⬇ Pull from GitHub</button>
+          </div>
+
+          <!-- PAT instructions collapsible -->
+          <details style="border:1px solid var(--border);border-radius:8px;padding:0;">
+            <summary style="padding:12px 16px;cursor:pointer;font-weight:600;font-size:0.88rem;color:var(--primary);list-style:none;display:flex;align-items:center;gap:6px;">
+              ℹ How to create a Fine-Grained PAT (step by step)
+            </summary>
+            <ol style="padding:12px 20px 14px 36px;font-size:0.84rem;line-height:2;color:#374151;">
+              <li>Go to <strong>github.com → Settings → Developer settings → Personal access tokens → Fine-grained tokens</strong></li>
+              <li>Click <strong>Generate new token</strong></li>
+              <li>Give it a name (e.g. <em>ALARM Writing Coach</em>) and set an expiry</li>
+              <li>Set <strong>Repository access</strong> to <em>Only select repositories</em> → choose your repo</li>
+              <li>Under <strong>Repository permissions</strong>, set <strong>Contents → Read and write</strong></li>
+              <li>Scroll down and click <strong>Generate token</strong> — copy it immediately (shown once only!)</li>
+              <li>Paste it into the PAT field above and click <strong>Save Config</strong></li>
+            </ol>
+          </details>
+
+          <hr style="margin:22px 0;border-color:var(--border);">
+
+          <!-- DANGER ZONE -->
+          <div style="background:#fff3f3;border:1px solid #ffcdd2;border-radius:8px;padding:14px;">
+            <strong style="color:#c62828;">⚠ Danger Zone</strong>
+            <p style="font-size:0.85rem;margin:8px 0;">Delete all custom questions and grader items from this browser (does not affect GitHub).</p>
+            <button style="background:#f44336;color:white;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:600;" onclick="deleteAllCustom()">Delete All Custom Content</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>© Computing Resources — ALARM Writing Coach · Year 12 Enterprise Computing · All rights reserved</footer>
+
+<script>
+// =====================================================
+// DATA
+// =====================================================
+const ALL_VERBS = [
+  { verb: "Identify", level: 1, levelName: "Identify/Define", def: "Name or recognise something without explanation.", example: "Identify two types of malware.", depth:"Short, factual — 1–2 sentences." },
+  { verb: "Define", level: 1, levelName: "Identify/Define", def: "State the precise meaning of a word or concept.", example: "Define the term 'firewall'.", depth:"State meaning clearly and precisely." },
+  { verb: "List", level: 1, levelName: "Identify/Define", def: "Record a number of points or features briefly.", example: "List three features of cloud computing.", depth:"Dot points or numbered list." },
+  { verb: "Name", level: 1, levelName: "Identify/Define", def: "State the name of a specific thing or concept.", example: "Name two encryption algorithms.", depth:"One word or short phrase each." },
+  { verb: "Recall", level: 1, levelName: "Identify/Define", def: "Remember and state facts from memory.", example: "Recall the steps in the systems development life cycle.", depth:"Factual statements only." },
+  { verb: "Describe", level: 2, levelName: "Describe/Outline", def: "Provide characteristics, features and attributes — the 'what'.", example: "Describe how a VPN works.", depth:"Key features with some detail, no evaluation." },
+  { verb: "Outline", level: 2, levelName: "Describe/Outline", def: "Sketch in general terms, indicate the main features.", example: "Outline the stages of the SDLC.", depth:"Main points in order, brief detail." },
+  { verb: "Summarise", level: 2, levelName: "Describe/Outline", def: "Express the most important points briefly.", example: "Summarise the impact of the Privacy Act on businesses.", depth:"Concise overview of key points." },
+  { verb: "Classify", level: 2, levelName: "Describe/Outline", def: "Group, arrange or order into categories.", example: "Classify the types of network threats.", depth:"Group into labelled categories." },
+  { verb: "Explain", level: 3, levelName: "Explain/Compare", def: "Make clear how or why something happens — causes and effects.", example: "Explain how phishing attacks exploit human behaviour.", depth:"Cause and effect, reason why, examples." },
+  { verb: "Compare", level: 3, levelName: "Explain/Compare", def: "Show similarities and differences between two or more things.", example: "Compare centralised and distributed database architectures.", depth:"Similarities AND differences — must do both." },
+  { verb: "Contrast", level: 3, levelName: "Explain/Compare", def: "Emphasise the differences between two or more things.", example: "Contrast procedural and object-oriented programming.", depth:"Focus on differences between options." },
+  { verb: "Apply", level: 3, levelName: "Explain/Compare", def: "Use knowledge or principles in a given context or situation.", example: "Apply the concept of abstraction to a real-world database design.", depth:"Link theory to specific scenario with examples." },
+  { verb: "Analyse", level: 4, levelName: "Analyse/Discuss", def: "Break into components and examine relationships, patterns, and significance.", example: "Analyse the security risks of using public cloud storage for sensitive data.", depth:"Components + relationships + implications." },
+  { verb: "Examine", level: 4, levelName: "Analyse/Discuss", def: "Investigate in depth, considering evidence and reasoning.", example: "Examine the role of metadata in digital forensics.", depth:"In-depth investigation of all aspects." },
+  { verb: "Discuss", level: 4, levelName: "Analyse/Discuss", def: "Explore the topic considering different perspectives and evidence.", example: "Discuss the ethical implications of AI-generated content.", depth:"Multiple perspectives + evidence." },
+  { verb: "Interpret", level: 4, levelName: "Analyse/Discuss", def: "Draw meaning from data, diagrams or situations.", example: "Interpret the network diagram and identify potential single points of failure.", depth:"Extract meaning + explain significance." },
+  { verb: "Evaluate", level: 5, levelName: "Evaluate/Assess", def: "Make a judgement about the value or quality of something using criteria.", example: "Evaluate the effectiveness of multi-factor authentication for a small business.", depth:"Judgement + criteria + pros/cons + evidence." },
+  { verb: "Assess", level: 5, levelName: "Evaluate/Assess", def: "Measure or judge value, importance or degree to which something is true.", example: "Assess the impact of cybercrime legislation on Australian businesses.", depth:"Weigh up evidence and deliver a supported verdict." },
+  { verb: "Justify", level: 5, levelName: "Evaluate/Assess", def: "Give reasons or evidence to support an argument or decision.", example: "Justify the use of agile methodology for this software project.", depth:"Support position with evidence and reasoning." },
+  { verb: "Recommend", level: 5, levelName: "Evaluate/Assess", def: "Put forward a solution or course of action with reasons.", example: "Recommend a database solution for a growing e-commerce business.", depth:"State recommendation + justification + alternatives considered." },
+  { verb: "Critically Analyse", level: 6, levelName: "Critically Analyse/Evaluate", def: "Break into components, examine relationships, and challenge assumptions or limitations.", example: "Critically analyse the effectiveness of current Australian cybersecurity policy.", depth:"All analysis PLUS challenge assumptions & identify limitations." },
+  { verb: "Critically Evaluate", level: 6, levelName: "Critically Analyse/Evaluate", def: "Make a judgement considering evidence, criteria, assumptions and limitations.", example: "Critically evaluate the claim that open-source software is inherently more secure.", depth:"Judgement + evidence + criteria + limitations + alternative perspectives." },
+];
+
+const LEVEL_COLORS = { 1: "#4caf50", 2: "#8bc34a", 3: "#ff9800", 4: "#f44336", 5: "#9c27b0", 6: "#3f51b5" };
+const LEVEL_NAMES = { 1:"Level 1 – Identify/Define", 2:"Level 2 – Describe/Outline", 3:"Level 3 – Explain/Compare", 4:"Level 4 – Analyse/Discuss", 5:"Level 5 – Evaluate/Assess", 6:"Level 6 – Critically Analyse/Evaluate" };
+
+// ---- DEFAULT QUESTIONS (questions.json structure) ----
+let CUSTOM_DATA = JSON.parse(localStorage.getItem('alarmCustomData') || 'null') || {
+  vscc: [],
+  build: [],
+  grader: []
+};
+let teacherPassword = localStorage.getItem('alarmTeacherPwd') || 'teacher2025';
+let teacherUnlocked = false;
+
+// Built-in questions for Module 3
+const BUILTIN_VSCC_A = [
+  { q:"Explain how encryption protects data transmitted over a network.", part:"A", verb:"Explain", subject:"Encryption / data transmission", criteria:"Network security context", content:"Symmetric/asymmetric encryption, TLS, how it scrambles data in transit", level:3 },
+  { q:"Evaluate the effectiveness of biometric authentication for enterprise security.", part:"A", verb:"Evaluate", subject:"Biometric authentication", criteria:"Enterprise security context", content:"Accuracy, spoofing risks, cost, user acceptance, comparison to passwords", level:5 },
+  { q:"Describe the main features of a relational database.", part:"A", verb:"Describe", subject:"Relational database", criteria:"", content:"Tables, primary/foreign keys, SQL, ACID properties, relationships", level:2 },
+];
+const BUILTIN_VSCC_B = [
+  { q:"To what extent does cloud computing address the scalability needs of modern businesses?", part:"B", verb:"Evaluate (implied)", subject:"Cloud computing scalability", criteria:"Modern business needs", content:"Elasticity, pay-as-you-go, global reach, downtime risks, vendor lock-in", level:5 },
+  { q:"In what ways has the introduction of the Privacy Act (2020 amendments) changed how businesses handle customer data?", part:"B", verb:"Analyse/Explain (implied)", subject:"Privacy Act (2020) impact", criteria:"Business data handling", content:"Notifiable data breaches, consent requirements, penalties, compliance costs", level:4 },
+];
+
+// Built-in build questions
+const BUILTIN_BUILD = [
+  {
+    q:"Evaluate the effectiveness of multi-factor authentication (MFA) as a cybersecurity strategy for a small business.",
+    verb:"Evaluate", level:"Evaluate", marks:8,
+    steps:[
+      { label:"Claim / Position", hint:"State your overall judgement about MFA's effectiveness.", starter:"Multi-factor authentication is [highly effective / moderately effective] for small businesses because..." },
+      { label:"Define / Explain", hint:"Define MFA and explain how it works.", starter:"MFA is a security mechanism that requires users to provide..." },
+      { label:"Evidence / Examples", hint:"Provide specific evidence or real-world examples that support your claim.", starter:"For example, statistics show that MFA blocks..." },
+      { label:"Counter-argument", hint:"Acknowledge a limitation or opposing view.", starter:"However, one limitation of MFA for small businesses is..." },
+      { label:"Criteria Judgement", hint:"Make a final supported judgement referencing your criteria (cost, effectiveness, ease of use).", starter:"On balance, considering cost, usability and security effectiveness, MFA is..." },
+    ]
+  },
+  {
+    q:"Analyse the security risks associated with employees using personal devices (BYOD) in the workplace.",
+    verb:"Analyse", level:"Analyse", marks:6,
+    steps:[
+      { label:"Introduce Topic", hint:"Briefly introduce BYOD and its relevance.", starter:"Bring Your Own Device (BYOD) policies allow employees to..." },
+      { label:"Component 1", hint:"Identify and explain a key security risk.", starter:"A significant security risk is data leakage, where..." },
+      { label:"Component 2", hint:"Identify and explain another security risk.", starter:"Additionally, unmanaged devices may contain malware that..." },
+      { label:"Relationships", hint:"Explain how these risks interact or compound each other.", starter:"These risks are compounded when employees..." },
+      { label:"Implications", hint:"Explain the broader implications for the organisation.", starter:"The implication for businesses is that without a formal BYOD policy..." },
+    ]
+  },
+];
+
+// Built-in grader responses
+const BUILTIN_GRADER = [
+  {
+    q:"Question asked: Evaluate the use of encryption to protect customer data. (8 marks)",
+    text:"Encryption is a method of protecting data. It scrambles information so that unauthorised users cannot read it. There are two types: symmetric and asymmetric. Businesses use encryption to keep customer data safe.",
+    correctLevel: 2,
+    explanation:"This response only describes what encryption is without making any judgement, weighing evidence, or applying criteria. It sits at ALARM Level 2 (Describe), not Level 5 (Evaluate)."
+  },
+  {
+    q:"Question asked: Explain how phishing attacks exploit human behaviour. (5 marks)",
+    text:"Phishing attacks exploit human behaviour by creating a sense of urgency and fear. For example, an email claiming 'Your account will be locked in 24 hours' pressures the victim to act quickly without checking authenticity. Attackers also impersonate trusted organisations — such as banks or the ATO — to lower the victim's guard. This exploits the psychological principle of authority, making victims more likely to click malicious links or reveal credentials.",
+    correctLevel: 3,
+    explanation:"This response clearly explains the cause (urgency, impersonation) and effect (victim complies), gives specific examples, and links to psychological principles. Well placed at Level 3 (Explain)."
+  },
+  {
+    q:"Question asked: Critically evaluate open-source software as a secure alternative to proprietary software. (10 marks)",
+    text:"Open-source software (OSS) is often claimed to be more secure because its source code is publicly visible, enabling a global community to identify and patch vulnerabilities rapidly — a principle known as Linus's Law. Evidence supports this: the Linux kernel, for example, has a strong security track record. However, this assumption must be challenged: public visibility also allows malicious actors to study vulnerabilities before patches are released. Furthermore, many OSS projects lack dedicated security teams, meaning vulnerabilities may go unnoticed for extended periods (e.g. the Heartbleed bug in OpenSSL). A critical evaluation must also consider the quality of the community behind the project, update frequency, and whether proprietary alternatives receive private scrutiny from well-funded teams. On balance, OSS can be highly secure when backed by an active community, but the blanket claim that it is 'inherently more secure' is an oversimplification that ignores contextual factors.",
+    correctLevel: 6,
+    explanation:"This response demonstrates all six levels: it defines, explains, analyses components, evaluates with criteria, and critically challenges the underlying assumption with evidence and counter-examples. This is Level 6 (Critically Evaluate)."
+  },
+];
+
+// =====================================================
+// TAB NAVIGATION
+// =====================================================
+const tabOrder = ['m1','m2','m3','m4','m5','m6'];
+function goTab(id) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelector(`.nav-tab[data-tab="${id}"]`).classList.add('active');
+  const idx = tabOrder.indexOf(id);
+  document.querySelectorAll('.prog-step').forEach((p,i) => {
+    p.classList.remove('active','done');
+    if(i < idx) p.classList.add('done');
+    else if(i === idx) p.classList.add('active');
+  });
+  document.getElementById('prog-label').textContent = `Module ${idx+1} of 6`;
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('.nav-tab').forEach(t => {
+  t.addEventListener('click', () => goTab(t.dataset.tab));
+});
+
+// =====================================================
+// MODULE 1 — RANDOM VERB MATCH ACTIVITY
+// =====================================================
+let m1Score = 0, m1Total = 0, m1Current = null, m1Started = false;
+
+function pickRandomVerb() {
+  const r = Math.floor(Math.random() * ALL_VERBS.length);
+  return ALL_VERBS[r];
+}
+function getDistractors(correct, count=3) {
+  const others = ALL_VERBS.filter(v => v.verb !== correct.verb);
+  const shuffled = others.sort(() => Math.random()-0.5);
+  return shuffled.slice(0, count);
+}
+function renderM1Activity() {
+  m1Current = pickRandomVerb();
+  document.getElementById('m1-verb-display').textContent = m1Current.verb;
+  document.getElementById('m1-feedback').textContent = '';
+  const options = [m1Current, ...getDistractors(m1Current, 3)].sort(() => Math.random()-0.5);
+  const container = document.getElementById('m1-options');
+  container.innerHTML = '';
+  options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'def-btn';
+    btn.textContent = opt.def;
+    btn.onclick = () => handleM1Answer(btn, opt.verb === m1Current.verb, container);
+    container.appendChild(btn);
+  });
+  document.getElementById('m1-next-btn').textContent = 'Skip';
+}
+function handleM1Answer(btn, isCorrect, container) {
+  m1Total++;
+  if(isCorrect) {
+    btn.classList.add('correct');
+    m1Score++;
+    document.getElementById('m1-feedback').innerHTML = `<span style="color:#4caf50;">✓ Correct! "${m1Current.verb}" means: ${m1Current.def}</span>`;
+  } else {
+    btn.classList.add('wrong');
+    document.getElementById('m1-feedback').innerHTML = `<span style="color:#f44336;">✗ Not quite. The correct definition is: ${m1Current.def}</span>`;
+    // Highlight correct
+    Array.from(container.querySelectorAll('.def-btn')).forEach(b => {
+      if(!b.classList.contains('wrong')) b.classList.add('correct');
+    });
+  }
+  Array.from(container.querySelectorAll('.def-btn')).forEach(b => { b.onclick = null; b.style.pointerEvents='none'; });
+  document.getElementById('m1-score').textContent = `Score: ${m1Score} / ${m1Total}`;
+  document.getElementById('m1-next-btn').textContent = 'Next Verb →';
+}
+document.getElementById('m1-next-btn').addEventListener('click', () => {
+  if(!m1Started) { m1Started = true; renderM1Activity(); return; }
+  renderM1Activity();
+});
+
+// =====================================================
+// MODULE 2 — SORT THE VERB
+// =====================================================
+let m2Selected = null, m2Placements = {}, m2CurrentVerbs = [];
+
+function buildVerbTable() {
+  const tbody = document.getElementById('verb-table-body');
+  ALL_VERBS.forEach(v => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td><strong>${v.verb}</strong></td>
+      <td><span class="badge" style="background:${LEVEL_COLORS[v.level]}">${LEVEL_NAMES[v.level]}</span></td>
+      <td>${v.def}</td>
+      <td style="font-size:0.8rem;color:var(--muted);">${v.depth}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function initM2() {
+  // Pick 10 random verbs
+  const shuffled = [...ALL_VERBS].sort(() => Math.random()-0.5);
+  m2CurrentVerbs = shuffled.slice(0,10);
+  m2Selected = null;
+  m2Placements = {};
+
+  const pool = document.getElementById('m2-verb-pool');
+  pool.innerHTML = '';
+  m2CurrentVerbs.forEach((v,i) => {
+    const chip = document.createElement('div');
+    chip.className = 'verb-chip';
+    chip.textContent = v.verb;
+    chip.dataset.idx = i;
+    chip.onclick = () => selectM2Verb(chip, i);
+    pool.appendChild(chip);
+  });
+
+  const buckets = document.getElementById('m2-buckets');
+  buckets.innerHTML = '';
+  for(let lv=1; lv<=6; lv++) {
+    const bkt = document.createElement('div');
+    bkt.className = 'level-bucket';
+    bkt.style.background = `linear-gradient(135deg, ${LEVEL_COLORS[lv]}cc, ${LEVEL_COLORS[lv]}99)`;
+    bkt.dataset.level = lv;
+    bkt.innerHTML = `<div class="bkt-title"><span style="background:rgba(255,255,255,0.3);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;">${lv}</span>${['Identify','Describe','Explain','Analyse','Evaluate','Critically'][lv-1]}</div><div class="placed-verbs" id="bkt-${lv}"></div>`;
+    bkt.onclick = () => placeM2Verb(lv);
+    buckets.appendChild(bkt);
+  }
+  document.getElementById('m2-result').style.display = 'none';
+}
+
+function selectM2Verb(chip, idx) {
+  document.querySelectorAll('.verb-chip').forEach(c => c.style.outline = 'none');
+  m2Selected = idx;
+  chip.style.outline = '3px solid white';
+}
+
+function placeM2Verb(level) {
+  if(m2Selected === null) { alert('Click a verb from the pool first!'); return; }
+  // Remove from previous bucket if already placed
+  Object.keys(m2Placements).forEach(k => {
+    if(m2Placements[k] === m2Selected) delete m2Placements[k];
+  });
+  // Find slot key
+  const key = `${level}-${m2Selected}`;
+  m2Placements[m2Selected] = level;
+
+  // Re-render all buckets
+  for(let lv=1;lv<=6;lv++) {
+    const bktDiv = document.getElementById(`bkt-${lv}`);
+    bktDiv.innerHTML = '';
+    Object.keys(m2Placements).forEach(verbIdx => {
+      if(m2Placements[verbIdx] == lv) {
+        const v = m2CurrentVerbs[verbIdx];
+        const c = document.createElement('span');
+        c.className = 'placed-chip';
+        c.textContent = v.verb;
+        c.onclick = (e) => { e.stopPropagation(); delete m2Placements[verbIdx]; initM2Buckets(); };
+        bktDiv.appendChild(c);
+      }
+    });
+  }
+  // Mark source chip as selected
+  document.querySelectorAll('.verb-chip').forEach((c,i) => {
+    c.classList.toggle('selected', m2Placements[i] !== undefined);
+    c.style.outline = 'none';
+  });
+  m2Selected = null;
+}
+
+function initM2Buckets() {
+  for(let lv=1;lv<=6;lv++) {
+    const bktDiv = document.getElementById(`bkt-${lv}`);
+    if(!bktDiv) continue;
+    bktDiv.innerHTML = '';
+    Object.keys(m2Placements).forEach(verbIdx => {
+      if(m2Placements[verbIdx] == lv) {
+        const v = m2CurrentVerbs[verbIdx];
+        const c = document.createElement('span');
+        c.className = 'placed-chip';
+        c.textContent = v.verb;
+        c.onclick = (e) => { e.stopPropagation(); delete m2Placements[verbIdx]; initM2Buckets(); };
+        bktDiv.appendChild(c);
+      }
+    });
+  }
+  document.querySelectorAll('.verb-chip').forEach((c,i) => {
+    c.classList.toggle('selected', m2Placements[i] !== undefined);
+  });
+}
+
+document.getElementById('m2-check-btn').addEventListener('click', () => {
+  const placed = Object.keys(m2Placements).length;
+  if(placed < m2CurrentVerbs.length) {
+    alert(`Please place all ${m2CurrentVerbs.length} verbs before checking. You've placed ${placed}.`);
+    return;
+  }
+  let correct = 0;
+  const hintList = document.getElementById('m2-hint-list');
+  hintList.innerHTML = '';
+  // Show correct/wrong on chips
+  for(let lv=1;lv<=6;lv++) {
+    const bktDiv = document.getElementById(`bkt-${lv}`);
+    Array.from(bktDiv.querySelectorAll('.placed-chip')).forEach(chip => {
+      const verbObj = m2CurrentVerbs.find(v => v.verb === chip.textContent);
+      if(verbObj && verbObj.level == lv) {
+        chip.classList.add('correct-placed');
+        correct++;
+        const li = document.createElement('li');
+        li.className = 'hint-correct';
+        li.innerHTML = `✓ <strong>${verbObj.verb}</strong> → ${LEVEL_NAMES[lv]}`;
+        hintList.appendChild(li);
+      } else {
+        chip.classList.add('wrong-placed');
+        const li = document.createElement('li');
+        li.className = 'hint-wrong';
+        li.innerHTML = `✗ <strong>${verbObj.verb}</strong> belongs to <strong>${LEVEL_NAMES[verbObj.level]}</strong> (you chose Level ${lv})`;
+        hintList.appendChild(li);
+      }
+    });
+  }
+  const resultDiv = document.getElementById('m2-result');
+  document.getElementById('m2-result-title').textContent = `You got ${correct} / ${m2CurrentVerbs.length} correct!`;
+  resultDiv.style.display = 'block';
+});
+
+document.getElementById('m2-reset-btn').addEventListener('click', initM2);
+
+// =====================================================
+// MODULE 3 — VSCC BREAKDOWN
+// =====================================================
+function renderVSCCQuestions() {
+  const allA = [...BUILTIN_VSCC_A, ...CUSTOM_DATA.vscc.filter(q => q.part==='A')];
+  const allB = [...BUILTIN_VSCC_B, ...CUSTOM_DATA.vscc.filter(q => q.part==='B')];
+
+  document.getElementById('m3-partA').innerHTML = '';
+  document.getElementById('m3-partB').innerHTML = '';
+  allA.forEach((q,i) => renderVSCCCard(q, 'A', i, document.getElementById('m3-partA')));
+  allB.forEach((q,i) => renderVSCCCard(q, 'B', i, document.getElementById('m3-partB')));
+}
+
+function renderVSCCCard(q, part, idx, container) {
+  const div = document.createElement('div');
+  div.className = `question-card card-p${part}`;
+  div.innerHTML = `
+    <div class="q-text">${part==='B'?'🔍 ':''}${q.q}</div>
+    <div class="vscc-inputs">
+      <div class="vscc-input-group">
+        <label>V — Verb</label>
+        <input type="text" placeholder="What is the directive verb?" data-answer="${q.verb}" />
+      </div>
+      <div class="vscc-input-group">
+        <label>S — Subject</label>
+        <input type="text" placeholder="What is the topic?" data-answer="${q.subject}" />
+      </div>
+      <div class="vscc-input-group">
+        <label>C — Criteria/Conditions</label>
+        <input type="text" placeholder="Any specific conditions?" data-answer="${q.criteria}" />
+      </div>
+      <div class="vscc-input-group">
+        <label>C — Content Plan</label>
+        <input type="text" placeholder="Key content/evidence to include" data-answer="${q.content||''}" />
+      </div>
+    </div>
+    <button class="check-vscc" onclick="checkVSCC(this)">Check ✓</button>
+    <div class="vscc-feedback"></div>
+  `;
+  container.appendChild(div);
+}
+
+function checkVSCC(btn) {
+  const card = btn.closest('.question-card');
+  const inputs = card.querySelectorAll('input');
+  const feedback = card.querySelector('.vscc-feedback');
+  let msgs = [];
+  inputs.forEach(inp => {
+    const ans = inp.dataset.answer || '';
+    const val = inp.value.trim().toLowerCase();
+    const exp = ans.toLowerCase();
+    if(val.length < 2) {
+      msgs.push(`<span style="color:#f44336;">⚠ Please fill in all fields.</span>`);
+    } else if(exp && val.split(/\s+/).some(w => exp.includes(w))) {
+      msgs.push(`<span style="color:#a5d6a7;">✓ ${inp.previousElementSibling.textContent}: Good — expected something like "<em>${ans}</em>"</span>`);
+    } else if(!exp) {
+      msgs.push(`<span style="color:#a5d6a7;">✓ ${inp.previousElementSibling.textContent}: Noted — "${inp.value}"</span>`);
+    } else {
+      msgs.push(`<span style="color:#f44336;">✗ ${inp.previousElementSibling.textContent}: Try again — hint: <em>${ans.substring(0,20)}…</em></span>`);
+    }
+  });
+  feedback.innerHTML = msgs.join('<br>');
+  feedback.style.display = 'block';
+}
+
+// =====================================================
+// MODULE 4 — BUILD A RESPONSE
+// =====================================================
+function getAllBuildQuestions() {
+  return [...BUILTIN_BUILD, ...CUSTOM_DATA.build];
+}
+
+function populateM4Select() {
+  const sel = document.getElementById('m4-q-select');
+  sel.innerHTML = '<option value="">— Select a question —</option>';
+  getAllBuildQuestions().forEach((q,i) => {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = `[${q.verb}] ${q.q.substring(0,80)}${q.q.length>80?'…':''}`;
+    sel.appendChild(opt);
+  });
+}
+
+function loadM4Question() {
+  const idx = document.getElementById('m4-q-select').value;
+  const area = document.getElementById('m4-steps-area');
+  area.innerHTML = '';
+  document.getElementById('assembled-response').textContent = 'Your assembled paragraph will appear here...';
+  document.getElementById('assembled-response').style.fontStyle = 'italic';
+  document.getElementById('assembled-response').style.color = '#9ca3af';
+  if(idx === '') return;
+  const q = getAllBuildQuestions()[idx];
+  if(!q) return;
+  const qBox = document.createElement('div');
+  qBox.style.cssText = 'background:#f0f4ff;border:2px solid var(--primary);border-radius:10px;padding:14px 18px;margin-bottom:16px;';
+  qBox.innerHTML = `<strong style="color:var(--primary);">${q.q}</strong><br><small style="color:var(--muted);">Key verb: ${q.verb} | ALARM: ${q.level} | Marks: ${q.marks||'?'}</small>`;
+  area.appendChild(qBox);
+
+  const COLORS = ['color-v','color-s','color-c','color-k','color-s'];
+  q.steps.forEach((step,i) => {
+    const row = document.createElement('div');
+    row.className = 'step-row';
+    row.innerHTML = `
+      <div>
+        <div class="step-label">${step.label}</div>
+        <div class="step-hint">${step.hint}</div>
+      </div>
+      <div>
+        <textarea placeholder="${step.starter}" data-color="${COLORS[i%COLORS.length]}" data-label="${step.label}"></textarea>
+      </div>`;
+    area.appendChild(row);
+  });
+
+  // Templates
+  renderTemplates(q.level);
+}
+
+function renderTemplates(level) {
+  const tl = document.getElementById('template-list');
+  const templates = {
+    'Identify':  `<strong>Template:</strong> [Topic] is/are [definition]. Example: [example].`,
+    'Describe':  `<strong>Template:</strong> [Topic] is characterised by [feature 1], [feature 2], and [feature 3]. For instance, [example].`,
+    'Explain':   `<strong>Template:</strong> [Topic] occurs when [cause]. This results in [effect], because [reason]. For example, [example].`,
+    'Analyse':   `<strong>Template:</strong> [Topic] can be broken into [component 1] and [component 2]. [Component 1] relates to [aspect A], while [component 2] affects [aspect B]. Together, these create [implication].`,
+    'Evaluate':  `<strong>Template:</strong> [Topic] is [judgement] because [criterion 1] and [criterion 2]. Evidence includes [evidence]. A limitation is [limitation]. On balance, [final verdict].`,
+    'Critically Analyse': `<strong>Template:</strong> [Topic] appears to [claim], however this assumption must be challenged because [counter]. Evidence shows [evidence]. Limitations of this view include [limitations]. A more complete understanding requires [alternative perspective].`
+  };
+  tl.innerHTML = `<div style="background:#f9fafb;border-radius:8px;padding:14px 18px;font-size:0.88rem;line-height:1.7;border:1px solid var(--border);">${templates[level] || templates['Explain']}</div>`;
+}
+
+function assembleResponse() {
+  const textareas = document.querySelectorAll('#m4-steps-area textarea');
+  if(textareas.length === 0) { alert('Please select a question first.'); return; }
+  const parts = [];
+  textareas.forEach(ta => {
+    const val = ta.value.trim();
+    if(val) parts.push(val);
+  });
+  if(parts.length === 0) { alert('Please write at least one part of your response.'); return; }
+  const assembled = parts.join(' ');
+  const respDiv = document.getElementById('assembled-response');
+  respDiv.textContent = assembled;
+  respDiv.style.fontStyle = 'normal';
+  respDiv.style.color = 'var(--text)';
+}
+
+function clearM4() {
+  document.querySelectorAll('#m4-steps-area textarea').forEach(ta => ta.value = '');
+  document.getElementById('assembled-response').textContent = 'Your assembled paragraph will appear here...';
+  document.getElementById('assembled-response').style.fontStyle = 'italic';
+  document.getElementById('assembled-response').style.color = '#9ca3af';
+}
+
+// =====================================================
+// MODULE 5 — LEVEL GRADER
+// =====================================================
+function getAllGraderItems() {
+  return CUSTOM_DATA.grader.length > 0 ? CUSTOM_DATA.grader : BUILTIN_GRADER;
+}
+
+function renderGrader() {
+  const container = document.getElementById('m5-grader-cards');
+  container.innerHTML = '';
+  getAllGraderItems().forEach((item,i) => {
+    const div = document.createElement('div');
+    div.className = 'grader-card';
+    div.innerHTML = `
+      <div class="sample-q">${item.q}</div>
+      <div class="sample-text">${item.text}</div>
+      <p style="font-size:0.85rem;font-weight:600;margin-bottom:8px;color:var(--primary);">Which ALARM level does this response demonstrate?</p>
+      <div class="level-btns" id="gbts-${i}">
+        ${[1,2,3,4,5,6].map(lv => `<button class="level-select-btn" style="border-color:${LEVEL_COLORS[lv]};color:${LEVEL_COLORS[lv]};" onclick="gradeAnswer(${i},${lv},this)">Level ${lv}</button>`).join('')}
+      </div>
+      <div class="grader-feedback" id="gfb-${i}"></div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function gradeAnswer(idx, chosen, btn) {
+  const items = getAllGraderItems();
+  const item = items[idx];
+  const fb = document.getElementById(`gfb-${idx}`);
+  const btns = document.querySelectorAll(`#gbts-${idx} .level-select-btn`);
+  btns.forEach(b => { b.disabled = true; b.style.opacity='0.6'; });
+  btn.style.opacity = '1';
+  if(chosen === item.correctLevel) {
+    fb.className = 'grader-feedback correct';
+    fb.innerHTML = `✓ Correct! This is Level ${item.correctLevel}. ${item.explanation}`;
+  } else {
+    fb.className = 'grader-feedback wrong';
+    fb.innerHTML = `✗ Not quite — this response is Level ${item.correctLevel}. ${item.explanation}`;
+    // Highlight correct
+    btns.forEach(b => { if(b.textContent.includes(item.correctLevel)) { b.style.opacity='1'; b.style.fontWeight='800'; } });
+  }
+  fb.style.display = 'block';
+}
+
+// =====================================================
+// MODULE 6 — FINAL QUIZ (random 10 from bank)
+// =====================================================
+// Each question has: type tag, question text, 4 options (shuffled order preserved),
+// ans = index of correct option, explanation shown after submit.
+// Types: K=Knowledge, U=Understanding, S=Skill
+const QUIZ_BANK = [
+
+  // ── KNOWLEDGE: definitions & ALARM level assignments ──
+  { type:"K", q:"What does the verb <strong>'Define'</strong> require a student to do?",
+    opts:["Make a judgement about value using criteria","State the precise meaning of a word or concept","Break something into components and examine relationships","Provide key features and characteristics"],
+    ans:1, exp:"'Define' (Level 1) means state the precise meaning — a concise, factual statement. No explanation or judgement is needed." },
+
+  { type:"K", q:"Which ALARM level does the verb <strong>'Describe'</strong> belong to?",
+    opts:["Level 1 – Identify/Define","Level 2 – Describe/Outline","Level 3 – Explain/Compare","Level 4 – Analyse/Discuss"],
+    ans:1, exp:"'Describe' sits at Level 2. It requires you to give key features and characteristics — more than just naming something, but without explanation of causes or effects." },
+
+  { type:"K", q:"What does <strong>'Critically Evaluate'</strong> require beyond a standard evaluation?",
+    opts:["More examples and dot points","A longer introduction","Challenging assumptions and identifying limitations of evidence","Defining all key terms first"],
+    ans:2, exp:"Critical evaluation (Level 6) requires all the elements of Evaluate PLUS challenging the assumptions behind claims and identifying limitations of evidence or perspectives." },
+
+  { type:"K", q:"The verb <strong>'Justify'</strong> belongs to which ALARM level?",
+    opts:["Level 3 – Explain/Compare","Level 4 – Analyse/Discuss","Level 5 – Evaluate/Assess","Level 6 – Critically Analyse"],
+    ans:2, exp:"'Justify' is Level 5. You must provide reasons and evidence to support an argument or decision — it implies a verdict that needs backing." },
+
+  { type:"K", q:"Which group of verbs is correctly matched to <strong>Level 4 (Analyse/Discuss)</strong>?",
+    opts:["Identify, Define, List","Describe, Outline, Summarise","Explain, Compare, Contrast","Analyse, Examine, Discuss, Interpret"],
+    ans:3, exp:"Level 4 verbs — Analyse, Examine, Discuss, Interpret — all require breaking down components, examining relationships, and exploring implications." },
+
+  { type:"K", q:"What does the verb <strong>'Outline'</strong> require?",
+    opts:["A detailed analysis of causes and effects","A judgement supported by criteria","A sketch of the main features in general terms","A comparison of two or more concepts"],
+    ans:2, exp:"'Outline' (Level 2) means sketch the main points in order with brief detail — more than listing but less than explaining." },
+
+  { type:"K", q:"Which verb means <strong>'draw meaning from data, diagrams or situations'</strong>?",
+    opts:["Classify","Interpret","Recommend","Contrast"],
+    ans:1, exp:"'Interpret' (Level 4) requires you to extract meaning from information provided — diagrams, data sets, or scenarios — and explain its significance." },
+
+  { type:"K", q:"The verb <strong>'Recommend'</strong> requires a student to:",
+    opts:["List all possible options without preference","Put forward a solution or course of action with reasons","Describe the features of a system","Explain the cause and effect of a problem"],
+    ans:1, exp:"'Recommend' (Level 5) means propose a specific course of action AND justify it with evidence. Merely listing options without a reasoned choice is insufficient." },
+
+  { type:"K", q:"Which pair of verbs belong to <strong>Level 3 (Explain/Compare)</strong>?",
+    opts:["Evaluate and Assess","Analyse and Discuss","Explain and Contrast","Identify and List"],
+    ans:2, exp:"Level 3 includes Explain, Compare, Contrast, and Apply. These all require cause-and-effect reasoning or showing similarities/differences with examples." },
+
+  { type:"K", q:"What does ALARM stand for?",
+    opts:["A Levelled Assessment of Response Marking","A Learning and Responding Matrix","A List of Academic Response Methods","An ATAR Learning and Review Matrix"],
+    ans:1, exp:"ALARM = A Learning and Responding Matrix. It groups NESA key verbs by the depth of thinking required, from simple recall to critical evaluation." },
+
+  // ── UNDERSTANDING: applying ALARM to scenarios ──
+  { type:"U", q:"A student is asked: <em>'Explain how a firewall protects a network.'</em> (5 marks). Which ALARM level is required?",
+    opts:["Level 1 – Identify/Define","Level 2 – Describe/Outline","Level 3 – Explain/Compare","Level 5 – Evaluate/Assess"],
+    ans:2, exp:"'Explain' is Level 3. The student must show cause and effect — how the firewall works and why that protects the network — with examples. Listing features alone (Level 2) would not earn full marks." },
+
+  { type:"U", q:"A student reads: <em>'Assess the impact of data breaches on consumer trust.'</em> What must their response include?",
+    opts:["A definition of data breach and a list of examples","Key features of data breaches and their types","A measurement or judgement with evidence, weighing positive and negative impacts","A step-by-step explanation of how a breach occurs"],
+    ans:2, exp:"'Assess' (Level 5) requires the student to weigh evidence and deliver a supported verdict — not just describe or explain, but judge the degree of impact." },
+
+  { type:"U", q:"A 2-mark question asks: <em>'Identify two cybersecurity threats.'</em> A student writes three paragraphs of analysis. What is the problem?",
+    opts:["The student used the wrong examples","The student didn't use VSCC structure","The response depth is too high for the mark allocation — over-writing wastes exam time","The student should have used dot points"],
+    ans:2, exp:"ALARM tells us a 2-mark question needs a Level 1 response — brief and factual. Writing lengthy analysis wastes valuable time and gains no extra marks." },
+
+  { type:"U", q:"The question is: <em>'Compare centralised and distributed database architectures.'</em> A student only lists features of centralised databases. What ALARM error have they made?",
+    opts:["They described instead of compared — missing the second subject and the differences","They used too many technical terms","They should have evaluated instead","They needed to define both terms first"],
+    ans:0, exp:"'Compare' requires similarities AND differences between both subjects. Writing only about one side earns partial marks at best — both components must be addressed." },
+
+  { type:"U", q:"A student is answering: <em>'Discuss the ethical implications of collecting biometric data.'</em> (7 marks). Which response approach is most appropriate?",
+    opts:["State one argument for and stop","Define 'biometric' then list three types","Explore multiple perspectives (pros, cons, stakeholders) with evidence and examples","Write the longest answer possible with as many facts as you know"],
+    ans:2, exp:"'Discuss' (Level 4) requires exploring different perspectives with evidence. A good response considers multiple stakeholder views and doesn't just argue one side." },
+
+  { type:"U", q:"The question reads: <em>'To what extent does cloud computing address the scalability needs of modern businesses?'</em> What is the implied verb?",
+    opts:["Describe","Explain","Evaluate","Outline"],
+    ans:2, exp:"'To what extent…' implies Evaluate (Level 5). The student must make a supported judgement — deciding how well cloud computing does or doesn't meet scalability needs — rather than just explaining what it does." },
+
+  { type:"U", q:"A question is worth 9 marks. Based on ALARM, which verbs are most likely to appear?",
+    opts:["Identify, List, Name","Describe, Outline, Summarise","Explain, Compare, Apply","Evaluate, Critically Analyse, Assess"],
+    ans:3, exp:"9-mark questions sit at the top of the ALARM matrix. They require extended responses with judgement, criteria, evidence, and often critical challenge of assumptions." },
+
+  { type:"U", q:"A student uses the VSCC framework. They identify: V=Analyse, S=cloud storage security, C=for healthcare organisations. What should they plan for <strong>Content</strong>?",
+    opts:["A definition of cloud storage","A list of cloud providers","Key components of cloud security, risks specific to healthcare, relationships between them, implications","The student's personal opinion on cloud vs on-premises"],
+    ans:2, exp:"For an Analyse question, Content planning should target the components to break down, the relationships between them, and the implications — matched to the specific criteria (healthcare context)." },
+
+  // ── SKILL: identifying errors, choosing verbs, decoding questions ──
+  { type:"S", q:"A student answers an <strong>'Evaluate'</strong> question by listing pros and cons without reaching a conclusion. What is missing?",
+    opts:["More pros and cons","Technical vocabulary","A supported final judgement — 'evaluate' requires a reasoned verdict, not just a balanced list","A definition of the key concept"],
+    ans:2, exp:"Evaluation (Level 5) must culminate in a supported judgement. Simply listing pros and cons is Level 4 at best (Analyse/Discuss). The student must commit to a conclusion supported by criteria." },
+
+  { type:"S", q:"A teacher writes feedback: <em>'You've described what encryption does, but you haven't explained WHY it protects data.'</em> The question verb was <strong>'Explain'</strong>. What does this tell you?",
+    opts:["The student's answer was at Level 1, not Level 3","The student answered at Level 2 (Describe) instead of Level 3 (Explain)","The student wrote too much","The student should have used 'Evaluate' instead"],
+    ans:1, exp:"'Describe' (Level 2) covers features and characteristics. 'Explain' (Level 3) requires cause and effect — the 'why' and 'how'. The student gave a Level 2 response for a Level 3 question." },
+
+  { type:"S", q:"You are writing a response to: <em>'Recommend a network topology for a school with 500 users.'</em> Which structure is MOST appropriate?",
+    opts:["Define topology → list all topologies → conclude","State your recommended topology → justify with evidence → address limitations → confirm recommendation","Describe the features of each topology equally","Identify the school's needs only"],
+    ans:1, exp:"'Recommend' (Level 5) requires: state the recommendation upfront, justify it with evidence relevant to the criteria (500 users, school context), acknowledge limitations, and confirm the verdict." },
+
+  { type:"S", q:"Identify the VSCC components of: <em>'Analyse the security risks of BYOD policies for a medium-sized business.'</em>",
+    opts:["V=Describe, S=BYOD, C=security, C=medium business","V=Analyse, S=security risks of BYOD, C=medium-sized business context, C=key risk components + relationships","V=Analyse, S=medium business, C=none, C=BYOD definition","V=Evaluate, S=BYOD policy, C=risk level, C=business size"],
+    ans:1, exp:"V=Analyse (break into components + implications), S=security risks of BYOD, C=medium-sized business (the specific condition), C=risk components to research. The 'medium-sized' detail is a criteria that scopes the answer." },
+
+  { type:"S", q:"A student is about to answer: <em>'In what ways has AI changed data privacy for consumers?'</em> Before writing, which ALARM step should they do FIRST?",
+    opts:["Write a long introduction defining AI","Identify the hidden verb — 'In what ways' implies Analyse or Explain","List all the ways they can think of","Write their conclusion first"],
+    ans:1, exp:"For hidden-verb questions, the first step is always to decode the implied verb before writing. 'In what ways' implies Analyse or Explain — knowing this tells you the required depth before you plan content." },
+
+  { type:"S", q:"A student writes: <em>'Cloud computing is popular because it is cheap and easy to use.'</em> for a 6-mark 'Analyse' question. What score band does this response fall into and why?",
+    opts:["High — it directly answers the question","Mid — it has some correct points but lacks depth of analysis","Low — it reads as Level 2 (Describe) with no component breakdown, relationships or implications","Zero — the facts are incorrect"],
+    ans:2, exp:"This response is superficial and describes rather than analyses. A Level 4 Analyse response must break the topic into components, examine relationships between them, and discuss implications — none of which is done here." },
+
+  { type:"S", q:"Which response best demonstrates the verb <strong>'Justify'</strong> for the question: <em>'Justify the use of agile methodology for this project.'</em>",
+    opts:["'Agile is a software development framework with iterative sprints.'","'Agile has advantages and disadvantages for software development.'","'Agile is the best method because it allows rapid response to changing requirements, which suits this project's unclear scope. Evidence shows projects with evolving needs are 40% more successful with agile. While waterfall provides structure, the flexibility of agile outweighs this here.'","'Agile involves sprints, retrospectives, and a product backlog.'"],
+    ans:2, exp:"Justification requires a clear position + reasons + evidence + acknowledgement of alternatives. Option C does all of this. The others describe or list without defending a position with reasoning." },
+
+  { type:"S", q:"After submitting a response, a teacher marks it: <em>'Good analysis, but you haven't challenged the assumptions behind the claim.'</em> Which verb was most likely asked?",
+    opts:["Explain","Evaluate","Critically Analyse or Critically Evaluate","Discuss"],
+    ans:2, exp:"Challenging underlying assumptions is the defining feature that separates Level 6 (Critically Analyse/Evaluate) from Level 4–5. If that element is missing, the response has not fully met the Level 6 requirement." },
+];
+
+let currentQuizSet = [];
+
+function pickQuizSet() {
+  // Ensure coverage: at least 3 K, 3 U, 3 S — then fill to 10 randomly
+  const byType = { K: [], U: [], S: [] };
+  QUIZ_BANK.forEach((q,i) => byType[q.type].push(i));
+  const shuffle = arr => arr.sort(() => Math.random()-0.5);
+  shuffle(byType.K); shuffle(byType.U); shuffle(byType.S);
+  const picked = new Set([...byType.K.slice(0,3), ...byType.U.slice(0,3), ...byType.S.slice(0,3)]);
+  // Fill remaining 1 from any
+  const remaining = shuffle(QUIZ_BANK.map((_,i)=>i).filter(i=>!picked.has(i)));
+  remaining.forEach(i => { if(picked.size < 10) picked.add(i); });
+  currentQuizSet = shuffle([...picked]).map(i => QUIZ_BANK[i]);
+}
+
+function buildQuiz() {
+  pickQuizSet();
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+  currentQuizSet.forEach((q,i) => {
+    const typeLabel = { K:'Knowledge', U:'Understanding', S:'Skill' }[q.type];
+    const typeColor = { K:'#1565c0', U:'#e65100', S:'#2e7d32' }[q.type];
+    const div = document.createElement('div');
+    div.className = 'quiz-q';
+    div.innerHTML = `
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <span style="font-size:0.72rem;font-weight:700;background:${typeColor};color:white;padding:2px 8px;border-radius:10px;">${typeLabel}</span>
+        <span style="font-size:0.8rem;color:var(--muted);">Q${i+1} of 10</span>
+      </div>
+      <p>${q.q}</p>
+      <div class="quiz-opts">${q.opts.map((o,j)=>`<label class="quiz-opt"><input type="radio" name="q${i}" value="${j}">${o}</label>`).join('')}</div>
+      <div class="quiz-result" id="qr-${i}"></div>`;
+    container.appendChild(div);
+  });
+  document.getElementById('quiz-score-display').textContent = '0/10 Score';
+}
+
+function submitQuiz() {
+  let score = 0;
+  currentQuizSet.forEach((q,i) => {
+    const sel = document.querySelector(`input[name="q${i}"]:checked`);
+    const rb = document.getElementById(`qr-${i}`);
+    rb.style.display = 'block';
+    if(!sel) {
+      rb.style.background='#f9fafb'; rb.style.border='1px solid #e5e7eb'; rb.style.borderRadius='6px'; rb.style.padding='8px 12px';
+      rb.innerHTML = `<span style="color:#888;">⚠ Not answered.</span>`;
+      return;
+    }
+    if(parseInt(sel.value) === q.ans) {
+      score++;
+      rb.style.background='#e8f5e9'; rb.style.border='1px solid #a5d6a7'; rb.style.borderRadius='6px'; rb.style.padding='8px 12px';
+      rb.innerHTML = `<span style="color:#1b5e20;font-weight:600;">✓ Correct!</span> <span style="color:#2e7d32;font-size:0.85rem;">${q.exp}</span>`;
+    } else {
+      rb.style.background='#fce4ec'; rb.style.border='1px solid #f48fb1'; rb.style.borderRadius='6px'; rb.style.padding='8px 12px';
+      rb.innerHTML = `<span style="color:#c62828;font-weight:600;">✗ Correct answer: ${q.opts[q.ans]}</span><br><span style="color:#880e4f;font-size:0.85rem;">${q.exp}</span>`;
+    }
+  });
+  const pct = Math.round(score/10*100);
+  const grade = pct >= 80 ? '🏆 Excellent!' : pct >= 60 ? '👍 Good effort!' : '📚 Keep practising!';
+  document.getElementById('quiz-score-display').textContent = `${score}/10 — ${pct}% ${grade}`;
+}
+
+function resetQuiz() {
+  buildQuiz(); // Picks a new random set
+}
+
+// =====================================================
+// TEACHER PANEL
+// =====================================================
+document.getElementById('teacherBtn').addEventListener('click', () => {
+  document.getElementById('teacher-overlay').classList.add('open');
+  if(!teacherUnlocked) {
+    document.getElementById('tp-lock-screen').style.display = 'block';
+    document.getElementById('tp-content').style.display = 'none';
+  }
+});
+document.getElementById('tp-close').addEventListener('click', () => {
+  document.getElementById('teacher-overlay').classList.remove('open');
+});
+document.getElementById('teacher-overlay').addEventListener('click', e => {
+  if(e.target === document.getElementById('teacher-overlay')) document.getElementById('teacher-overlay').classList.remove('open');
+});
+document.querySelectorAll('.tp-tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tp-tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.tp-section').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById(t.dataset.tptab).classList.add('active');
+  });
+});
+
+function unlockTeacher() {
+  const pwd = document.getElementById('tp-pwd-input').value;
+  if(pwd === teacherPassword) {
+    teacherUnlocked = true;
+    document.getElementById('tp-lock-screen').style.display = 'none';
+    document.getElementById('tp-content').style.display = 'block';
+    renderTPLists();
+    renderTPGraderItems();
+    loadGHConfigToForm(); // Populate GitHub fields from saved config
+  } else {
+    document.getElementById('tp-pwd-err').textContent = 'Incorrect password. Try again.';
+  }
+}
+
+function saveVSCCQuestion() {
+  const q = document.getElementById('tp-vscc-q').value.trim();
+  const part = document.getElementById('tp-vscc-part').value;
+  const verb = document.getElementById('tp-vscc-verb').value.trim();
+  const subject = document.getElementById('tp-vscc-subject').value.trim();
+  const criteria = document.getElementById('tp-vscc-criteria').value.trim();
+  const content = document.getElementById('tp-vscc-content').value.trim();
+  const level = parseInt(document.getElementById('tp-vscc-level').value);
+  if(!q || !verb || !subject) { alert('Please fill in Question, Verb and Subject.'); return; }
+  CUSTOM_DATA.vscc.push({ q, part, verb, subject, criteria, content, level });
+  saveCustomData();
+  renderTPLists();
+  renderVSCCQuestions();
+  ['tp-vscc-q','tp-vscc-verb','tp-vscc-subject','tp-vscc-criteria','tp-vscc-content'].forEach(id => document.getElementById(id).value='');
+  alert('VSCC question saved!');
+}
+
+// Build steps editor
+let bldStepCount = 0;
+function addBldStep() {
+  bldStepCount++;
+  const container = document.getElementById('tp-bld-steps');
+  const div = document.createElement('div');
+  div.className = 'step-editor';
+  div.dataset.stepId = bldStepCount;
+  div.innerHTML = `
+    <input type="text" placeholder="Step label (e.g. Claim / Position)" class="bld-step-label" />
+    <input type="text" placeholder="Hint for students" class="bld-step-hint" />
+    <input type="text" placeholder="Sentence starter" class="bld-step-starter" />
+    <button onclick="this.parentElement.remove()" style="background:#fce4ec;color:#c62828;border:none;padding:3px 10px;border-radius:5px;cursor:pointer;font-size:0.8rem;margin-top:4px;">Remove</button>
+  `;
+  container.appendChild(div);
+}
+
+function saveBuildQuestion() {
+  const q = document.getElementById('tp-bld-q').value.trim();
+  const verb = document.getElementById('tp-bld-verb').value.trim();
+  const level = document.getElementById('tp-bld-level').value;
+  const marks = parseInt(document.getElementById('tp-bld-marks').value) || null;
+  if(!q || !verb) { alert('Please fill in Question and Verb.'); return; }
+  const stepEditors = document.querySelectorAll('.step-editor');
+  const steps = [];
+  stepEditors.forEach(se => {
+    const lbl = se.querySelector('.bld-step-label').value.trim();
+    const hnt = se.querySelector('.bld-step-hint').value.trim();
+    const str = se.querySelector('.bld-step-starter').value.trim();
+    if(lbl) steps.push({ label: lbl, hint: hnt, starter: str });
+  });
+  if(steps.length === 0) { alert('Please add at least one step.'); return; }
+  CUSTOM_DATA.build.push({ q, verb, level, marks, steps });
+  saveCustomData();
+  renderTPLists();
+  populateM4Select();
+  document.getElementById('tp-bld-q').value='';
+  document.getElementById('tp-bld-verb').value='';
+  document.getElementById('tp-bld-steps').innerHTML='';
+  bldStepCount=0;
+  alert('Build question saved!');
+}
+
+function renderTPLists() {
+  // VSCC list
+  const vl = document.getElementById('tp-vscc-list');
+  vl.innerHTML = '<h4 style="margin-bottom:8px;color:var(--primary);">Saved VSCC Questions</h4>';
+  if(CUSTOM_DATA.vscc.length === 0) { vl.innerHTML += '<p style="color:var(--muted);font-size:0.85rem;">No custom VSCC questions yet.</p>'; }
+  CUSTOM_DATA.vscc.forEach((q,i) => {
+    const d = document.createElement('div');
+    d.className = 'q-list-item';
+    d.innerHTML = `<div class="q-info"><strong>${q.q.substring(0,70)}…</strong><br><small>Part ${q.part} | Verb: ${q.verb} | Level: ${q.level}</small></div><button class="del-btn" onclick="deleteVSCCQ(${i})">Delete</button>`;
+    vl.appendChild(d);
+  });
+  // Build list
+  const bl = document.getElementById('tp-bld-list');
+  bl.innerHTML = '<h4 style="margin-bottom:8px;color:var(--primary);">Saved Build Questions</h4>';
+  if(CUSTOM_DATA.build.length === 0) { bl.innerHTML += '<p style="color:var(--muted);font-size:0.85rem;">No custom build questions yet.</p>'; }
+  CUSTOM_DATA.build.forEach((q,i) => {
+    const d = document.createElement('div');
+    d.className = 'q-list-item';
+    d.innerHTML = `<div class="q-info"><strong>${q.q.substring(0,70)}…</strong><br><small>Verb: ${q.verb} | Level: ${q.level}</small></div><button class="del-btn" onclick="deleteBuildQ(${i})">Delete</button>`;
+    bl.appendChild(d);
+  });
+}
+
+function deleteVSCCQ(i) { CUSTOM_DATA.vscc.splice(i,1); saveCustomData(); renderTPLists(); renderVSCCQuestions(); }
+function deleteBuildQ(i) { CUSTOM_DATA.build.splice(i,1); saveCustomData(); renderTPLists(); populateM4Select(); }
+
+// Grader teacher panel
+function renderTPGraderItems() {
+  const container = document.getElementById('tp-grader-items');
+  container.innerHTML = '';
+  CUSTOM_DATA.grader.forEach((item,i) => {
+    const div = document.createElement('div');
+    div.className = 'grader-q-item';
+    div.innerHTML = `
+      <strong style="font-size:0.82rem;color:var(--primary);">Response ${i+1}</strong>
+      <textarea readonly style="background:#f9fafb;">${item.q}</textarea>
+      <textarea readonly>${item.text}</textarea>
+      <div><select disabled><option>Level ${item.correctLevel}</option></select>
+      <button class="del-btn" onclick="deleteGraderItem(${i})">Delete</button></div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function addGraderItem() {
+  const container = document.getElementById('tp-grader-items');
+  const i = container.querySelectorAll('.grader-q-item').length;
+  const div = document.createElement('div');
+  div.className = 'grader-q-item';
+  div.innerHTML = `
+    <strong style="font-size:0.82rem;color:var(--primary);">New Response</strong>
+    <textarea class="gi-question" placeholder="Context / question prompt shown to students..."></textarea>
+    <textarea class="gi-text" placeholder="Sample student response text that students will grade..."></textarea>
+    <div>
+      <select class="gi-level">
+        ${[1,2,3,4,5,6].map(l=>`<option value="${l}">Level ${l} – ${['Identify','Describe','Explain','Analyse','Evaluate','Critically Analyse'][l-1]}</option>`).join('')}
+      </select>
+      <textarea class="gi-expl" placeholder="Explanation shown after student answers..." style="min-height:50px;margin-top:6px;"></textarea>
+    </div>
+  `;
+  container.appendChild(div);
+}
+
+function saveGraderItems() {
+  const items = [];
+  document.querySelectorAll('#tp-grader-items .grader-q-item').forEach(div => {
+    const q = div.querySelector('.gi-question');
+    const t = div.querySelector('.gi-text');
+    const lv = div.querySelector('.gi-level');
+    const ex = div.querySelector('.gi-expl');
+    if(q && t && q.value.trim()) {
+      items.push({ q: q.value.trim(), text: t.value.trim(), correctLevel: parseInt(lv.value), explanation: ex ? ex.value.trim() : '' });
+    }
+  });
+  CUSTOM_DATA.grader = items;
+  saveCustomData();
+  renderGrader();
+  alert(`${items.length} grader item(s) saved!`);
+}
+
+function deleteGraderItem(i) { CUSTOM_DATA.grader.splice(i,1); saveCustomData(); renderTPGraderItems(); renderGrader(); }
+
+function changePassword() {
+  const np = document.getElementById('tp-new-pwd').value;
+  const cp = document.getElementById('tp-confirm-pwd').value;
+  const msg = document.getElementById('tp-pwd-change-msg');
+  if(np.length < 6) { msg.style.color='#f44336'; msg.textContent='Password must be at least 6 characters.'; return; }
+  if(np !== cp) { msg.style.color='#f44336'; msg.textContent='Passwords do not match.'; return; }
+  teacherPassword = np;
+  localStorage.setItem('alarmTeacherPwd', np);
+  msg.style.color='#2e7d32'; msg.textContent='Password updated successfully!';
+}
+
+function deleteAllCustom() {
+  if(!confirm('Delete ALL custom questions and grader items? This cannot be undone.')) return;
+  CUSTOM_DATA = { vscc: [], build: [], grader: [] };
+  saveCustomData();
+  renderTPLists();
+  renderTPGraderItems();
+  renderVSCCQuestions();
+  populateM4Select();
+  renderGrader();
+  alert('All custom content deleted.');
+}
+
+function saveCustomData() {
+  localStorage.setItem('alarmCustomData', JSON.stringify(CUSTOM_DATA));
+}
+
+function exportQuestionsJSON() {
+  const data = JSON.stringify(CUSTOM_DATA, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='questions.json'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// =====================================================
+// GITHUB SYNC
+// =====================================================
+const GH_CONFIG_KEY = 'alarmGHConfig';
+
+function ghConfig() {
+  return JSON.parse(localStorage.getItem(GH_CONFIG_KEY) || '{}');
+}
+
+function saveGHConfig() {
+  const user   = document.getElementById('gh-user').value.trim();
+  const repo   = document.getElementById('gh-repo').value.trim();
+  const branch = document.getElementById('gh-branch').value.trim() || 'main';
+  const path   = document.getElementById('gh-path').value.trim() || 'questions.json';
+  const pat    = document.getElementById('gh-pat').value.trim();
+  if (!user || !repo || !pat) {
+    ghBanner('error', '⚠ Username, Repository and PAT are all required before saving.');
+    return;
+  }
+  localStorage.setItem(GH_CONFIG_KEY, JSON.stringify({ user, repo, branch, path, pat }));
+  ghBanner('success', '✓ GitHub config saved to your browser.');
+}
+
+function loadGHConfigToForm() {
+  const c = ghConfig();
+  if (c.user)   document.getElementById('gh-user').value   = c.user;
+  if (c.repo)   document.getElementById('gh-repo').value   = c.repo;
+  if (c.branch) document.getElementById('gh-branch').value = c.branch;
+  if (c.path)   document.getElementById('gh-path').value   = c.path;
+  if (c.pat)    document.getElementById('gh-pat').value    = c.pat;
+}
+
+function togglePAT() {
+  const inp = document.getElementById('gh-pat');
+  const eye = document.getElementById('gh-pat-eye');
+  if (inp.type === 'password') { inp.type = 'text';     eye.textContent = '🙈'; }
+  else                         { inp.type = 'password'; eye.textContent = '👁';  }
+}
+
+function ghBanner(type, msg) {
+  const b = document.getElementById('gh-status-banner');
+  const styles = {
+    success: 'background:#e8f5e9;border:1px solid #a5d6a7;color:#1b5e20;',
+    error:   'background:#fce4ec;border:1px solid #f48fb1;color:#880e4f;',
+    info:    'background:#e3f2fd;border:1px solid #90caf9;color:#0d47a1;',
+    working: 'background:#fff8e1;border:1px solid #ffe082;color:#6d4c00;',
+  };
+  b.style.cssText = (styles[type] || styles.info) + 'border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:0.85rem;';
+  b.textContent = msg;
+  b.style.display = 'block';
+}
+
+function ghApiUrl(config) {
+  const p = (config.path || 'questions.json').replace(/^\//, '');
+  return `https://api.github.com/repos/${config.user}/${config.repo}/contents/${p}`;
+}
+
+function ghHeaders(config) {
+  return {
+    'Authorization': `Bearer ${config.pat}`,
+    'Accept': 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+    'Content-Type': 'application/json',
+  };
+}
+
+async function testGHConnection() {
+  const c = ghConfig();
+  if (!c.user || !c.repo || !c.pat) { ghBanner('error', '⚠ Save your GitHub config first.'); return; }
+  ghBanner('working', '🔌 Testing connection…');
+  try {
+    const res = await fetch(`https://api.github.com/repos/${c.user}/${c.repo}`, { headers: ghHeaders(c) });
+    if (res.ok) {
+      const data = await res.json();
+      ghBanner('success', `✓ Connected! Repo "${data.full_name}" found (${data.private ? 'private' : 'public'}). You're good to publish.`);
+    } else if (res.status === 401) {
+      ghBanner('error', '✗ Authentication failed — check your PAT is correct and has Contents: Read & Write permission.');
+    } else if (res.status === 404) {
+      ghBanner('error', '✗ Repository not found — check the username and repo name are exact.');
+    } else {
+      ghBanner('error', `✗ GitHub returned status ${res.status}. Check your config.`);
+    }
+  } catch (e) {
+    ghBanner('error', '✗ Network error — could not reach api.github.com.');
+  }
+}
+
+async function publishToGitHub() {
+  const c = ghConfig();
+  if (!c.user || !c.repo || !c.pat) { ghBanner('error', '⚠ Save your GitHub config first (Settings & GitHub tab).'); return; }
+
+  ghBanner('working', '⏳ Publishing to GitHub…');
+
+  const content    = JSON.stringify(CUSTOM_DATA, null, 2);
+  const b64content = btoa(unescape(encodeURIComponent(content)));
+  const branch     = c.branch || 'main';
+  const url        = ghApiUrl(c);
+
+  // 1. Try to get current SHA (needed for update, not for create)
+  let sha = null;
+  try {
+    const getRes = await fetch(`${url}?ref=${branch}`, { headers: ghHeaders(c) });
+    if (getRes.ok) {
+      const existing = await getRes.json();
+      sha = existing.sha;
+    } else if (getRes.status !== 404) {
+      const err = await getRes.json().catch(() => ({}));
+      ghBanner('error', `✗ Could not check existing file: ${err.message || getRes.status}`);
+      return;
+    }
+  } catch(e) {
+    ghBanner('error', '✗ Network error when reading existing file from GitHub.');
+    return;
+  }
+
+  // 2. PUT (create or update)
+  const body = {
+    message: `Update questions.json — ALARM Writing Coach (${new Date().toLocaleString('en-AU')})`,
+    content: b64content,
+    branch,
+    ...(sha ? { sha } : {}),
+  };
+
+  try {
+    const putRes = await fetch(url, {
+      method: 'PUT',
+      headers: ghHeaders(c),
+      body: JSON.stringify(body),
+    });
+
+    if (putRes.ok) {
+      const result = await putRes.json();
+      const fileUrl = result.content?.html_url || `https://github.com/${c.user}/${c.repo}/blob/${branch}/${c.path || 'questions.json'}`;
+      ghBanner('success', `🚀 Published! questions.json updated on branch "${branch}". Students will load the new questions on next page refresh. View file: ${fileUrl}`);
+    } else {
+      const err = await putRes.json().catch(() => ({}));
+      if (putRes.status === 422 && err.message && err.message.includes('sha')) {
+        ghBanner('error', '✗ SHA conflict — the file changed on GitHub since you last loaded. Try Test Connection, then publish again.');
+      } else if (putRes.status === 403) {
+        ghBanner('error', '✗ Permission denied — ensure your PAT has Contents: Read & Write access to this repo.');
+      } else {
+        ghBanner('error', `✗ GitHub error (${putRes.status}): ${err.message || 'Unknown error'}`);
+      }
+    }
+  } catch(e) {
+    ghBanner('error', '✗ Network error when writing to GitHub.');
+  }
+}
+
+async function loadFromGitHub() {
+  const c = ghConfig();
+  if (!c.user || !c.repo || !c.pat) { ghBanner('error', '⚠ Save your GitHub config first.'); return; }
+  ghBanner('working', '⬇ Fetching questions.json from GitHub…');
+
+  const branch = c.branch || 'main';
+  const url    = ghApiUrl(c);
+
+  try {
+    const res = await fetch(`${url}?ref=${branch}`, { headers: ghHeaders(c) });
+    if (res.status === 404) {
+      ghBanner('info', 'ℹ No questions.json found in the repo yet. Publish first to create it.');
+      return;
+    }
+    if (!res.ok) {
+      ghBanner('error', `✗ GitHub returned ${res.status}.`);
+      return;
+    }
+    const data = await res.json();
+    // GitHub returns base64-encoded content (may have newlines)
+    const decoded = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
+    const parsed  = JSON.parse(decoded);
+
+    // Validate structure
+    if (typeof parsed !== 'object' || parsed === null) throw new Error('Unexpected format');
+    CUSTOM_DATA.vscc    = Array.isArray(parsed.vscc)    ? parsed.vscc    : [];
+    CUSTOM_DATA.build   = Array.isArray(parsed.build)   ? parsed.build   : [];
+    CUSTOM_DATA.grader  = Array.isArray(parsed.grader)  ? parsed.grader  : [];
+    saveCustomData();
+    renderTPLists();
+    renderTPGraderItems();
+    renderVSCCQuestions();
+    populateM4Select();
+    renderGrader();
+    ghBanner('success', `✓ Loaded from GitHub! VSCC: ${CUSTOM_DATA.vscc.length}, Build: ${CUSTOM_DATA.build.length}, Grader: ${CUSTOM_DATA.grader.length} items.`);
+  } catch(e) {
+    ghBanner('error', `✗ Could not parse questions.json from GitHub: ${e.message}`);
+  }
+}
+
+// Auto-load questions.json from GitHub on page start (if config exists and file is public or PAT set)
+async function autoLoadFromGitHub() {
+  const c = ghConfig();
+  if (!c.user || !c.repo) return; // No config saved, skip silently
+
+  const branch = c.branch || 'main';
+  const url    = ghApiUrl(c);
+  const headers = c.pat
+    ? ghHeaders(c)
+    : { 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
+
+  try {
+    const res = await fetch(`${url}?ref=${branch}`, { headers });
+    if (!res.ok) return; // Silently fail — local data used instead
+    const data    = await res.json();
+    const decoded = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
+    const parsed  = JSON.parse(decoded);
+    if (typeof parsed !== 'object' || parsed === null) return;
+    CUSTOM_DATA.vscc   = Array.isArray(parsed.vscc)   ? parsed.vscc   : CUSTOM_DATA.vscc;
+    CUSTOM_DATA.build  = Array.isArray(parsed.build)  ? parsed.build  : CUSTOM_DATA.build;
+    CUSTOM_DATA.grader = Array.isArray(parsed.grader) ? parsed.grader : CUSTOM_DATA.grader;
+    // Re-render student-facing modules with GitHub data
+    renderVSCCQuestions();
+    populateM4Select();
+    renderGrader();
+  } catch(e) {
+    // Silent fail — local questions used
+  }
+}
+
+// =====================================================
+// INIT
+// =====================================================
+buildVerbTable();
+initM2();
+renderVSCCQuestions();
+populateM4Select();
+renderGrader();
+buildQuiz();
+autoLoadFromGitHub(); // Silently fetch teacher questions from GitHub on load
+</script>
+</body>
+</html>
