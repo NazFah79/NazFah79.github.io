@@ -1,162 +1,301 @@
-[
-  {
-    "id": 1773273791900,
-    "q": "Describe the purpose of your Decision Support System and the enterprise problem it aims to solve.",
-    "verb": "Describe",
-    "level": "Describe",
-    "marks": null,
-    "steps": [
-      {
-        "label": "Topic Sentence",
-        "hint": "Clearly state the enterprise problem and the overall purpose of your DSS.",
-        "starter": "The purpose of this Decision Support System is to address the enterprise problem of…"
-      },
-      {
-        "label": "Enterprise Problem Description",
-        "hint": "Briefly explain what the problem is and why it occurs in the enterprise environment.",
-        "starter": "This problem occurs when organisations… which results in…"
-      },
-      {
-        "label": "DSS Solution Overview",
-        "hint": "Describe how the DSS will help solve or support decisions related to the problem.",
-        "starter": "The system will assist users by analysing data and providing recommendations about…"
-      },
-      {
-        "label": "Linking Statement",
-        "hint": "Connect the problem and the DSS purpose.",
-        "starter": "Therefore, the DSS supports enterprise decision-making by…"
-      }
-    ],
-    "teacherQ": true,
-    "createdAt": "12/03/2026"
-  },
-  {
-    "id": 1773275206341,
-    "q": "Explain how user inputs, the knowledge base and the inference engine work together in your proposed DSS.",
-    "verb": "Explain",
-    "level": "Explain",
-    "marks": null,
-    "steps": [
-      {
-        "label": "Topic Sentence",
-        "hint": "Introduce the main components of the DSS you will explain.",
-        "starter": "A Decision Support System operates through several components including…"
-      },
-      {
-        "label": "Component 1 (User Input)",
-        "hint": "Explain what data the user provides and why it is needed.",
-        "starter": "Firstly, the user interface collects inputs such as… which allow the system to…"
-      },
-      {
-        "label": "Component 2 (Knowledge Base)",
-        "hint": "Explain what the knowledge base stores and how it supports decision making.",
-        "starter": "The knowledge base stores information such as… allowing the system to…"
-      },
-      {
-        "label": "Component 3 (Inference Engine)",
-        "hint": "Explain how rules or logic generate decisions.",
-        "starter": "The inference engine processes the input data by applying rules to…"
-      },
-      {
-        "label": "Linking Sentence",
-        "hint": "Explain how the components interact together.",
-        "starter": "Together, these components enable the DSS to generate recommendations by…"
-      }
-    ],
-    "teacherQ": true,
-    "createdAt": "12/03/2026"
-  },
-  {
-    "id": 1773276430318,
-    "q": "Analyse the needs of the target users of your Decision Support System.",
-    "verb": "Analyse",
-    "level": "Analyse",
-    "marks": null,
-    "steps": [
-      {
-        "label": "Topic Sentence",
-        "hint": "Identify the main user group.",
-        "starter": "The primary users of this Decision Support System are…"
-      },
-      {
-        "label": "User Need 1",
-        "hint": "Explain one important need or requirement.",
-        "starter": "One key need of these users is… because…"
-      },
-      {
-        "label": "User Need 2",
-        "hint": "Explain another need related to decision-making or efficiency.",
-        "starter": "Another important requirement is… which helps users to…"
-      },
-      {
-        "label": "Impact on System Design",
-        "hint": "Link the user needs to system features.",
-        "starter": "These needs influence the design of the system by requiring…"
-      }
-    ],
-    "teacherQ": true,
-    "createdAt": "12/03/2026"
-  },
-  {
-    "id": 1773276605883,
-    "q": "Evaluate the suitability of the recommendations your Decision Support System will produce.",
-    "verb": "Evaluate",
-    "level": "Evaluate",
-    "marks": null,
-    "steps": [
-      {
-        "label": "Topic Sentence",
-        "hint": "State what recommendations the DSS will generate.",
-        "starter": "The Decision Support System will generate recommendations such as…"
-      },
-      {
-        "label": "Strength/Benefit",
-        "hint": "Explain why these recommendations are useful or valuable",
-        "starter": "One advantage of these recommendations is that they allow organisations to…"
-      },
-      {
-        "label": "Limitation/Risk",
-        "hint": "Identify a limitation or challenge",
-        "starter": "However, a limitation of this approach is… which may affect…"
-      },
-      {
-        "label": "Judgement Statement",
-        "hint": "Provide an overall judgement of suitability.",
-        "starter": "Overall, the recommendations produced by the system are suitable because…"
-      }
-    ],
-    "teacherQ": true,
-    "createdAt": "12/03/2026"
-  },
-  {
-    "id": 1773276767437,
-    "q": "Explain the role of data in supporting decisions within your DSS.",
-    "verb": "Explain",
-    "level": "Explain",
-    "marks": null,
-    "steps": [
-      {
-        "label": "Topic Sentence",
-        "hint": "Introduce the role of data in the DSS",
-        "starter": "Data plays a critical role in the operation of the Decision Support System because…"
-      },
-      {
-        "label": "Data Type 1",
-        "hint": "Describe one type of data used",
-        "starter": "One type of data used by the system is… which helps to…"
-      },
-      {
-        "label": "Data Type 2",
-        "hint": "Decsribe another type of data",
-        "starter": "Another important dataset includes… which allows the system to…"
-      },
-      {
-        "label": "Linking Statement",
-        "hint": "Explain how data leads to decisions",
-        "starter": "By analysing these data sources, the DSS can generate recommendations that…"
-      }
-    ],
-    "teacherQ": true,
-    "createdAt": "12/03/2026"
-  }
-]
+{
+  "vscc": [
+    {
+      "q": "Analyse and evaluate the enterprise problem your DSS intends to solve and clearly justify why it requires a DSS solution.",
+      "part": "A",
+      "verb": "Analyse,Evaluate,Justify",
+      "subject": "Look at the NESA verbs (write all verbs you find)",
+      "criteria": "Analyse key features of existing systems and use a criteria (ease of use/complexity/speed/quality) to evaluate the existing systems for any limitations to justify why the problem exist and requires a solution.",
+      "content": "what features of existing solytions you will evaluate and justify they need a solution",
+      "level": 6
+    },
+    {
+      "q": "Describe the overall purpose of your DSS.",
+      "part": "A",
+      "verb": "Describe",
+      "subject": "The purpose and the goal of DSS",
+      "criteria": "Describe the intent of the system , Decisions the system supports, target audience and recommendations produced.",
+      "content": "problem addresses, target users, decision making tasks, types of recommendations",
+      "level": 2
+    },
+    {
+      "q": "Analyse the needs of the target users.",
+      "part": "A",
+      "verb": "Analyse",
+      "subject": "The needs and requirements of the target users.",
+      "criteria": "Examine how user needs e.g. User goals, problems, technical expertise,constraints, access to information can influence DSS design.",
+      "content": "user reserach, personas, usage scenarios",
+      "level": 4
+    },
+    {
+      "q": "Evaluate the suitability of the decisions or recommendations the system will produce.",
+      "part": "A",
+      "verb": "Evaluate",
+      "subject": "Decisions or recommendations produced by the DSS",
+      "criteria": "Considering both advantages and limitations to evaluate the outputs against defined quality criteria sich as accuracy, usefulness,speed,reliability,clarity",
+      "content": "Think about what quality criteria will be used to evaluate the outputs generated by your DSS and how would you Evaluate it.",
+      "level": 5
+    },
+    {
+      "q": "Use a top-level IPSO diagram to illustrate how the system will function including knowledge base, rule base, inference process and user inputs.",
+      "part": "A",
+      "verb": "Illustrate",
+      "subject": "The conceptual functioning of the DSS",
+      "criteria": "IPSO should clearly show inputs, processes, storage and outputs through labelling and annotations identifying all parts of the DSS and how data flows from different parts to generate recommendations/outputs. Add a brief explanantion about the diagram and how the system works.",
+      "content": "IPSO diagram, labelling, annotation, data flow, explanation",
+      "level": 3
+    },
+    {
+      "q": "Analyse and evaluate the types of data to be used.",
+      "part": "A",
+      "verb": "Analyse and Evaluate",
+      "subject": "The data used witin the DSS",
+      "criteria": "Analyse multiple kind of data sources and their types (structured/unstructued/alternate) and evaluate their suitablity to generate outputs.",
+      "content": "data types, data sources, criteria to assess suitability, WHY chosen data is suitable to generate outputs from DSS",
+      "level": 5
+    },
+    {
+      "q": "Evaluate relevant social, ethical and legal considerations related to data collection, processing and system design.",
+      "part": "A",
+      "verb": "Evaluate",
+      "subject": "Social, Ethcal and legal implications of data collection and DSS design",
+      "criteria": "Evaluate considerations related to data collection,processing and system design features which have social, ethical and legal implications.",
+      "content": "impact on users, accessibility, fairness of decisions, transparency of system logic, data bias, privacy laws, data protection, IP issues",
+      "level": 5
+    }
+  ],
+  "build": [
+    {
+      "q": "Analyse and evaluate the enterprise problem your DSS intends to solve and clearly justify why it requires a DSS solution.",
+      "verb": "Evaluate",
+      "level": "Evaluate",
+      "marks": 8,
+      "steps": [
+        {
+          "label": "Context/Problem Identification",
+          "hint": "Introduce the enterprise problem and explain where it occurs.",
+          "starter": "The enterprise problem that this Decision Support System aims to address is…"
+        },
+        {
+          "label": "Background Explanation",
+          "hint": "Explain how this problem currently affects users or organisations.",
+          "starter": "Currently, users experience this problem because…"
+        },
+        {
+          "label": "Analysis of existing solutions",
+          "hint": "Examine how similar systems are attempting to solve the problem",
+          "starter": "Several existing systems attempt to solve this problem, such as…"
+        },
+        {
+          "label": "Feature Analysis",
+          "hint": "Break down the features of these systems and how they function. [use references+images+Other data to support your identification of problem]",
+          "starter": "These systems typically include features such as…"
+        },
+        {
+          "label": "Evaluation Against Criteria",
+          "hint": "Evaluate these systems using criteria like ease of use, complexity or speed. [Design your own metrics/Criteria] Collect evidence (user reviews etc)",
+          "starter": "When evaluated against criteria such as ease of use, accuracy and response time, these systems…"
+        },
+        {
+          "label": "Justified Judgement",
+          "hint": "Explain why these limitations justify the need for your DSS.",
+          "starter": "Therefore, a new DSS is justified because it will…"
+        }
+      ]
+    },
+    {
+      "q": "Describe the overall purpose of your DSS.",
+      "verb": "Describe",
+      "level": "Describe",
+      "marks": 3,
+      "steps": [
+        {
+          "label": "System Introduction",
+          "hint": "Introduce the DSS and its main purpose.",
+          "starter": "The purpose of this Decision Support System is to…"
+        },
+        {
+          "label": "Target Users",
+          "hint": "Identify who will use the system.",
+          "starter": "The primary users of this system are…"
+        },
+        {
+          "label": "Decision Support Function",
+          "hint": "Explain what decision the system supports.",
+          "starter": "The system assists users in making decisions about…"
+        },
+        {
+          "label": "System Outputs",
+          "hint": "Explain what recommendations or outputs the system will produce.",
+          "starter": "Based on user inputs and system rules, the DSS will generate…"
+        }
+      ]
+    },
+    {
+      "q": "Analyse the needs of the target users.",
+      "verb": "Analyse",
+      "level": "Analyse",
+      "marks": 4,
+      "steps": [
+        {
+          "label": "Identify Users",
+          "hint": "Introduce the target users.",
+          "starter": "The target users of this DSS include…"
+        },
+        {
+          "label": "Describe User Goals",
+          "hint": "Explain what users want to achieve.",
+          "starter": "These users need to make decisions about…"
+        },
+        {
+          "label": "Analyse User Challenges",
+          "hint": "Break down the problems users face without the system. [This is a summary information from Q1]",
+          "starter": "One major challenge users experience is…"
+        },
+        {
+          "label": "Analyse Information Needs",
+          "hint": "Explain the type of information users need to make decisions.",
+          "starter": "To make effective decisions, users require access to…"
+        },
+        {
+          "label": "Link Needs to DSS Features",
+          "hint": "Explain how the system design addresses these needs.",
+          "starter": "The DSS addresses these needs by…"
+        }
+      ]
+    },
+    {
+      "q": "Evaluate the suitability of the decisions or recommendations the system will produce.",
+      "verb": "Evaluate",
+      "level": "Evaluate",
+      "marks": 8,
+      "steps": [
+        {
+          "label": "Identify System Decisions",
+          "hint": "Explain the type of recommendations the system produces.",
+          "starter": "The DSS will generate recommendations such as…"
+        },
+        {
+          "label": "Explain How Decisions Are Generated",
+          "hint": "Describe how rules and data lead to these recommendations.",
+          "starter": "These recommendations are generated using…"
+        },
+        {
+          "label": "Analyse Decision Benefits",
+          "hint": "Explain why these decisions are useful for users.These recommendations benefit users because…",
+          "starter": ""
+        },
+        {
+          "label": "Consider limitations",
+          "hint": "Identify possible weaknesses or risks",
+          "starter": "However, a potential limitation of these recommendations is…"
+        },
+        {
+          "label": "Judgement of Suitability",
+          "hint": "Make a final judgement about how suitable the decisions are.",
+          "starter": "Overall, the recommendations produced by the DSS are suitable because…"
+        }
+      ]
+    },
+    {
+      "q": "Use a top-level IPSO diagram to illustrate how the system will function including knowledge base, rule base, inference process and user inputs.",
+      "verb": "Illustrate",
+      "level": "Explain",
+      "marks": 4,
+      "steps": [
+        {
+          "label": "System Overview",
+          "hint": "Introduce the conceptual structure of the system.",
+          "starter": "The overall functioning of the DSS can be represented using a top-level IPSO diagram."
+        },
+        {
+          "label": "Inputs Explanation",
+          "hint": "Identify the data or information users provide.",
+          "starter": "The inputs to the system include…"
+        },
+        {
+          "label": "Process Explanation",
+          "hint": "Explain how the knowledge base, rule base and inference engine operate.",
+          "starter": "Within the processing stage, the knowledge base stores…, while the rule base contains…"
+        },
+        {
+          "label": "Storage Explanation",
+          "hint": "Explain where system data is stored.",
+          "starter": "The system stores information such as…"
+        },
+        {
+          "label": "Outputs Explanation",
+          "hint": "Explain what recommendations the system generates.",
+          "starter": "The output of the system includes…"
+        }
+      ]
+    },
+    {
+      "q": "Analyse and evaluate the types of data to be used.",
+      "verb": "Evaluate",
+      "level": "Evaluate",
+      "marks": 8,
+      "steps": [
+        {
+          "label": "Identify Data Types",
+          "hint": "Introduce the different types of data the system uses.",
+          "starter": "The DSS will utilise several types of data including…"
+        },
+        {
+          "label": "Analyse Data Sources",
+          "hint": "Explain where the data comes from.",
+          "starter": "This data will be collected from sources such as…"
+        },
+        {
+          "label": "Analyse Role of Data in Decision Making",
+          "hint": "Explain how the data supports the DSS logic.",
+          "starter": "This data contributes to decision making by…"
+        },
+        {
+          "label": "Evaluate Data Quality",
+          "hint": "Assess reliability, accuracy and usefulness.",
+          "starter": "The reliability of this data is important because…"
+        },
+        {
+          "label": "Judgement of Suitability",
+          "hint": "Conclude whether the data is appropriate for the system.",
+          "starter": "Overall, the selected data sources are suitable because…"
+        }
+      ]
+    },
+    {
+      "q": "Evaluate relevant social, ethical and legal considerations related to data collection, processing and system design.",
+      "verb": "Evaluate",
+      "level": "Evaluate",
+      "marks": 8,
+      "steps": [
+        {
+          "label": "Introduce Considerations",
+          "hint": "Introduce the importance of considering impacts when designing the DSS.",
+          "starter": "When designing this DSS, it is important to consider several social, ethical and legal issues."
+        },
+        {
+          "label": "Social Considerations",
+          "hint": "Explain how the system may affect users or society.",
+          "starter": "A key social consideration is…"
+        },
+        {
+          "label": "Ethical Considerations",
+          "hint": "Discuss fairness, bias or responsible use of data.",
+          "starter": "An important ethical issue is…"
+        },
+        {
+          "label": "Legal Considerations",
+          "hint": "Discuss privacy, intellectual property or data protection laws.",
+          "starter": "A relevant legal consideration is…"
+        },
+        {
+          "label": "Evaluation and Judgement",
+          "hint": "Evaluate the importance of addressing these issues.",
+          "starter": "Overall, addressing these considerations is essential because…"
+        }
+      ]
+    }
+  ],
+  "grader": []
+}
