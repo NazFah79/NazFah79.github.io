@@ -1647,6 +1647,7 @@ function exportQuestionsJSON() {
   URL.revokeObjectURL(url);
 }
 
+
 // =====================================================
 // GITHUB SYNC
 // =====================================================
@@ -1890,52 +1891,46 @@ buildQuiz();
 // On load: restore baked raw URL from localStorage (teacher's saved config)
 // then fetch questions.json as a plain public URL — works on ALL devices, no PAT needed.
 (async function autoLoadFromGitHub() {
-  // Step 1: find the public raw URL.
-  // Priority: (a) data attribute baked into HTML by teacher, (b) saved in localStorage
-  let rawUrl = document.body.dataset.ghRawUrl || '';
-  if (!rawUrl) {
-    const c = ghConfig();
-    if (c.rawUrl) {
-      rawUrl = c.rawUrl;
-      document.body.dataset.ghRawUrl = rawUrl; // restore for this session
-    } else if (c.user && c.repo) {
-      // Reconstruct from config fields if rawUrl wasn't saved yet
-      rawUrl = buildPublicUrls(c.user, c.repo, c.branch, c.path).raw;
-    }
-  }
-  if (!rawUrl) return; // No config at all — use built-in questions
+  // ── HARDCODED URLS ──────────────────────────────────────────────────────────
+  // GitHub Pages URL  → served from the same domain as your tool (fastest)
+  const PAGES_URL = 'https://nazfah79.github.io/questions.json';
+  // raw.githubusercontent.com → direct fallback, always works for public repos
+  const RAW_URL   = 'https://raw.githubusercontent.com/nazfah79/alarm-writing-coach/main/questions.json';
+  // ────────────────────────────────────────────────────────────────────────────
 
-  // Step 2: also check if GitHub Pages URL might be faster (same domain avoids extra DNS lookup)
-  const c       = ghConfig();
-  const pagesUrl = c.pagesUrl || '';
+  // Also check localStorage in case teacher saved a different path/branch
+  const c = ghConfig();
+  const localRaw   = c.rawUrl   || '';
+  const localPages = c.pagesUrl || '';
 
-  // Step 3: try Pages URL first, fall back to raw.githubusercontent.com
-  const urlsToTry = [pagesUrl, rawUrl].filter(Boolean);
+  // Build ordered list of URLs to try — prefer same-domain Pages, then raw, then any local overrides
+  const urlsToTry = [...new Set([PAGES_URL, RAW_URL, localPages, localRaw].filter(Boolean))];
 
   for (const url of urlsToTry) {
     try {
-      // Use cache-busting to avoid stale CDN cache on student devices
       const res = await fetch(`${url}?_=${Date.now()}`, {
         cache: 'no-store',
         headers: { 'Accept': 'application/json' },
       });
       if (!res.ok) continue;
+
       const parsed = await res.json();
       if (typeof parsed !== 'object' || parsed === null) continue;
 
-      CUSTOM_DATA.vscc   = Array.isArray(parsed.vscc)   ? parsed.vscc   : CUSTOM_DATA.vscc;
-      CUSTOM_DATA.build  = Array.isArray(parsed.build)  ? parsed.build  : CUSTOM_DATA.build;
-      CUSTOM_DATA.grader = Array.isArray(parsed.grader) ? parsed.grader : CUSTOM_DATA.grader;
+      // Only replace if the fetched data actually has content
+      if (Array.isArray(parsed.vscc)   && parsed.vscc.length)   CUSTOM_DATA.vscc   = parsed.vscc;
+      if (Array.isArray(parsed.build)  && parsed.build.length)  CUSTOM_DATA.build  = parsed.build;
+      if (Array.isArray(parsed.grader) && parsed.grader.length) CUSTOM_DATA.grader = parsed.grader;
 
       renderVSCCQuestions();
       populateM4Select();
       renderGrader();
-      return; // Success — stop trying URLs
+      return; // success — stop trying
     } catch(e) {
-      // Try next URL
+      // this URL failed — try the next one
     }
   }
-  // All URLs failed silently — built-in questions remain
+  // All URLs failed silently — built-in example questions remain visible
 })();
 </script>
 </body>
